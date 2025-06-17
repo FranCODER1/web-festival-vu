@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ArtistasView from '../views/ArtistasView.vue'
 import CronogramaView from '../views/CronogramaView.vue'
+import EntradasView from '../views/EntradasView.vue'
 // Importa aquí las otras vistas cuando las crees:
 // import EntradasView from '../views/EntradasView.vue'
 // import UbicacionView from '../views/UbicacionView.vue'
@@ -23,6 +24,11 @@ const routes = [
     name: 'cronograma',
     component: CronogramaView
   },
+  {
+    path: '/entradas',
+    name: 'entradas',
+    component: EntradasView
+  }
   // Descomenta y completa estas rutas cuando tengas los componentes de vista:
   // {
   //   path: '/entradas',
