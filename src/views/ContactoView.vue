@@ -16,7 +16,6 @@
           <ul class="lista-redes">
             <li><a href="https://www.facebook.com/franco.rivero.7967/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-square"></i> Facebook</a></li>
             <li><a href="https://www.instagram.com/p/DJhlXBevOy0/" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i> Instagram</a></li>
-            {/* Puedes añadir más redes */}
           </ul>
         </section>
 

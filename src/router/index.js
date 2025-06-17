@@ -35,6 +35,11 @@ const routes = [
     path: '/ubicacion',
     name: 'ubicacion',
     component: UbicacionView
+  },
+  {
+    path: '/contacto',
+    name: 'contacto',
+    component: ContactoView
   }
   // Descomenta y completa estas rutas cuando tengas los componentes de vista:
   // {
