@@ -83,7 +83,7 @@ export default {
           description: 'Innovadora propuesta que fusiona el folclore con sonidos contemporáneos y electrónicos, manteniendo la esencia de la música de Santiago del Estero.',
           imageSrc: 'img/arcanos.jpeg',
           imageAlt: 'Foto de Los Arcanos del Desierto',
-          audioSrc: 'audio/Los Arcanos del Desierto - No se que tiene la guaracha.mp3'
+          audioSrc: '../audio/Los Arcanos del Desierto - Fusión Santiagueña.mp3'
         }
       ],
       generosMusicales: [

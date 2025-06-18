@@ -1,3 +1,5 @@
+/* estilos.css - Global Styles */
+
 :root {
     --color-primary-red: #D7252D;
     --color-secondary-blue: #1D325B; 
@@ -20,6 +22,7 @@
     --rgb-text-light: 240, 244, 248; 
 }
 
+/* --- RESET Y ESTILOS BASE --- */
 * {
     margin: 0;
     padding: 0;
@@ -36,9 +39,10 @@ body {
     line-height: 1.6;
     background-color: var(--color-background-body-dark); 
     color: var(--color-text-light); 
-    overflow-x: hidden; 
+    overflow-x: hidden; /* Prevenir scroll horizontal indeseado */
 }
 
+/* --- TIPOGRAFÍA BASE --- */
 h1, h2, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
     color: var(--color-primary-red);
@@ -46,7 +50,7 @@ h1, h2, h4, h5, h6 {
     line-height: 1.2;
     transition: color 0.3s ease; 
 }
-h3 {
+h3 { /* Estilo global por defecto para H3 */
     font-family: 'Montserrat', sans-serif;
     color: var(--color-accent-light-blue); 
     margin-bottom: 0.75em;
@@ -55,7 +59,7 @@ h3 {
 }
 h1 { font-size: 2.8rem; } 
 h2 { font-size: 2.2rem; }
-h3 { font-size: 1.6rem; }
+h3 { font-size: 1.6rem; } /* Los componentes pueden sobrescribir esto si es necesario */
 
 p { 
     margin-bottom: 1rem;
@@ -63,7 +67,7 @@ p {
     transition: color 0.3s ease;
 }
 
-a {
+a { /* Estilo base para enlaces */
     color: var(--color-primary-red);
     text-decoration: none;
     transition: color 0.3s ease, transform 0.2s ease; 
@@ -73,30 +77,25 @@ a:hover, a:focus {
     color: var(--color-hover-red);
 }
 
-ul, ol {
+ul, ol { /* Estilo base para listas no estilizadas (ej. en contenido de texto) */
     margin-left: 20px;
     margin-bottom: 1rem;
 }
-/* Esta regla es para el UL del footer y el UL del NAV en ESCRITORIO */
-nav ul, footer ul {
-    list-style: none;
-    margin-left: 0;
-    padding-left: 0;
-}
+/* Los ULs de navegación y footer se manejan en App.vue o son sin estilo por defecto */
 
-img {
+img { /* Responsividad básica para imágenes */
     max-width: 100%;
     height: auto;
     display: block;
-    border-radius: 4px; 
+    border-radius: 4px; /* Ligero redondeo general */
 }
-audio {
+audio { /* Estilo base para audio */
     width: 100%;
     margin-top: 1em;
     max-width: 100%;
 }
 
-a[target="_blank"]::after {
+a[target="_blank"]::after { /* Icono para enlaces externos */
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     content: "\f35d";
@@ -109,6 +108,7 @@ a[target="_blank"]:hover::after {
     transform: scale(1.1) translateX(1px);
 }
 
+/* --- UTILIDADES Y LAYOUT GENERAL --- */
 .container {
     width: 90%;
     max-width: 1200px; 
@@ -118,160 +118,24 @@ a[target="_blank"]:hover::after {
     padding-right: 15px;
 }
 
-/* Header original (si se usa fuera de App.vue) */
-header {
-    padding-top: 1rem;
-}
-header .container { 
-    padding-bottom: 1rem; 
-    display: flex; 
-    align-items: center;
-    gap: 20px;
-}
-header img#logo { 
-    width: 80px; 
-    height: auto;
-    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-header img#logo:hover {
-    transform: rotate(10deg) scale(1.1);
-}
-header h1 {
-    color: var(--color-primary-red);
-    margin-bottom: 0;
-    line-height: 1.2; 
-    font-size: 1.8rem; 
-}
-
-/* ESTILOS DEL NAVBAR PRINCIPAL (BASE Y ESCRITORIO) */
-nav#main-nav { /* Este es el <nav> en App.vue */
-    background-color: rgba(var(--rgb-background-surface-dark), 0.5); 
-    -webkit-backdrop-filter: blur(10px); 
-    backdrop-filter: blur(10px); 
-    padding: 0.75rem 0; 
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000; /* z-index para el navbar en sí */
-    box-shadow: 0 2px 10px rgba(var(--rgb-black), 0.3); 
-}
-/* .nav-container es estilizado en App.vue <style> para asegurar position:relative */
-/* Si defines .nav-container aquí, asegúrate de que también tenga position:relative */
-/* nav#main-nav .nav-container { ... } */
-
-
-.nav-container #logo-nav { /* El logo dentro del nav en App.vue */
-    width: 70px; 
-    height: auto;
-    transition: transform 0.3s ease;
-}
-.nav-container #logo-nav:hover {
-    transform: scale(1.1);
-}
-
-/* ESTILOS PARA EL UL DE NAVEGACIÓN EN ESCRITORIO */
-/* Estos estilos se aplicarán al <ul> en App.vue cuando la pantalla sea ancha */
-nav#main-nav ul {
-    display: flex; 
-    flex-direction: row; /* Asegurar que sea horizontal */
-    justify-content: center; 
-    align-items: center;
-    flex-grow: 1; 
-    /* Resets para asegurar que no herede estilos de menú móvil si hay conflicto */
-    position: static; /* No absoluto */
-    background-color: transparent;
-    box-shadow: none;
-    padding: 0;
-    border-top: none;
-    width: auto; /* No 100% de ancho */
-    /* Los siguientes estilos de App.vue para el ul móvil NO deben estar aquí */
-    /* -webkit-backdrop-filter: blur(8px); etc. */
-}
-nav#main-nav ul li {
-    display: inline-block; 
-    margin: 0 0.5rem; 
-    width: auto; /* Reset del width: 100% del móvil */
-    text-align: center; 
-}
-nav#main-nav ul li a {
-    color: var(--color-text-light);
-    padding: 0.6em 1em; 
-    display: block;
-    text-transform: uppercase;
-    font-weight: 500;
-    font-size: 0.85rem; 
-    border-radius: 5px;
-    position: relative; /* Para el ::before */
-    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-    border-bottom: none; /* Reset del borde del móvil */
-}
-nav#main-nav ul li a::before { 
-    content: '';
-    position: absolute;
-    bottom: 3px; 
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background-color: var(--color-primary-red);
-    transition: width 0.3s ease-out; 
-    transform: translateX(-50%);
-    display: block; /* Asegurar que se muestre en escritorio */
-}
-nav#main-nav ul li a:hover,
-nav#main-nav ul li a:focus,
-nav#main-nav ul li a.active { /* .active es aplicado por Vue Router */
-    background-color: transparent; 
-    color: var(--color-primary-red); 
-    text-decoration: none;
-    transform: translateY(-1px); 
-}
-nav#main-nav ul li a:hover::before,
-nav#main-nav ul li a:focus::before,
-nav#main-nav ul li a.active::before {
-    width: 60%; 
-}
-nav#main-nav ul li a.nav-button-cta {
-    background-color: var(--color-primary-red);
-    color: var(--color-text-light);
-    padding: 0.6em 1.2em;
-    border-radius: 20px; 
-}
-nav#main-nav ul li a.nav-button-cta:hover,
-nav#main-nav ul li a.nav-button-cta:focus,
-nav#main-nav ul li a.nav-button-cta.active {
-    background-color: var(--color-hover-red);
-    color: var(--color-text-light);
-    transform: translateY(-1px) scale(1.03);
-}
-nav#main-nav ul li a.nav-button-cta::before {
-    display: none; 
-}
-
-/* --- RESTO DE ESTILOS GLOBALES --- */
-main {
-    padding: 0; /* Las secciones manejan su propio padding */
-}
-section { 
+/* --- LAYOUT DE PÁGINA (MAIN Y SECTIONS GLOBALES) --- */
+/* main es renderizado por App.vue, su padding es 0 globalmente */
+section { /* Estilo base para <section> si se usa directamente en las vistas */
     padding: 3rem 15px; 
-    margin-bottom: 0; 
-    background-color: transparent; 
-    border: none; 
-    border-radius: 0; 
-    box-shadow: none; 
+    /* Las secciones específicas (ej. #hero, #destacados) tendrán sus propios estilos */
 }
 
-/* HERO SECTION */
+/* --- SECCIONES ESPECÍFICAS (CONTENEDORES) --- */
+
+/* HERO SECTION (HomeView.vue) */
 #hero { 
     display: flex; 
     justify-content: center;
     align-items: center;
     padding: 4rem 20px; 
 }
-/* Dentro de tu estilos.css global */
-
-.hero-panel {
-    background-image: linear-gradient(rgba(var(--rgb-black), 0.5), rgba(var(--rgb-black), 0.7)), url('../img/concierto.jpg'); /* <<--- ESTA ES LA RUTA CORRECTA */
+.hero-panel { /* Estilos del panel visual del hero */
+    background-image: linear-gradient(rgba(var(--rgb-black), 0.5), rgba(var(--rgb-black), 0.7)), url('../img/concierto.jpg'); /* RUTA DESDE src/assets/css/ A src/assets/img/ */
     background-size: cover;
     background-position: center;
     border-radius: 20px; 
@@ -289,68 +153,53 @@ section {
     position: relative; 
     overflow: hidden; 
 }
-.hero-content {
+.hero-content { /* Contenedor del texto dentro del panel */
     width: 100%;
     max-width: 650px; 
 }
-#hero h2 { 
+#hero h2 { /* Título dentro del hero */
     font-size: 2.8rem; 
     color: var(--color-text-light);
     margin-bottom: 0.75em;
     text-shadow: 1px 1px 6px rgba(var(--rgb-black), 0.6);
     line-height: 1.2;
 }
-#hero p { 
+#hero p { /* Párrafo dentro del hero */
     font-size: 1.1rem; 
     color: var(--color-text-medium); 
     max-width: 100%; 
     margin-bottom: 1.5rem; 
     text-shadow: 1px 1px 4px rgba(var(--rgb-black), 0.5);
 }
-.hero-cta-buttons {
+.hero-cta-buttons { /* Contenedor de botones en el hero */
     display: flex;
     gap: 1rem;
     justify-content: center;
     margin-top: 1rem; 
 }
-#hero .btn-secondary {
-    background-color: rgba(var(--rgb-black), 0.3); 
-    color: var(--color-text-light);
-    border: 1px solid var(--color-text-light); 
-    padding: 0.7em 1.8em;
-    font-weight: 500;
-}
-#hero .btn-secondary:hover {
-    background-color: var(--color-text-light);
-    color: var(--color-background-body-dark);
-    border-color: var(--color-text-light);
-}
+/* Estilos para .btn-secondary dentro del hero están en HomeView.vue <style scoped> o aquí si son globales */
 
-/* SECCIÓN DESTACADOS */
-#destacados {
+/* SECCIÓN DESTACADOS (HomeView.vue) */
+#destacados { /* Contenedor de la sección */
     background-color: var(--color-background-surface-dark); 
     padding-top: 4rem;
     padding-bottom: 4rem;
 }
-#destacados h2 {
+#destacados h2 { /* Título "Artistas Principales" */
     text-align: center;
     margin-bottom: 2.5rem;
     color: var(--color-primary-red);
 }
-.destacados-grid { 
+.destacados-grid { /* Contenedor de las ArtistCard en HomeView */
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
     gap: 2rem;
-    /* container-type: inline-size; No es necesario si no usas container queries */
 }
-/* Los estilos de #destacados article ahora están en el componente ArtistCard.vue <style scoped> */
-/* Si necesitas algún estilo contenedor para el article desde aquí, sería así: */
-/* .destacados-grid > article { ... } pero es mejor que el componente se estilice a sí mismo */
+/* LOS ESTILOS DE LAS TARJETAS DE ARTISTA ESTÁN EN ArtistCard.vue <style scoped> */
 
 
-/* VIDEO PROMO */
+/* VIDEO PROMO (HomeView.vue) */
 #video-promo {
-    background-color: var(--color-background-body-dark); 
     padding-top: 3rem;
     padding-bottom: 4rem;
 }
@@ -365,7 +214,6 @@ section {
     max-width: 800px; 
     padding-top: 56.25%; 
     margin: 1rem auto;
-    border: none; 
     border-radius: 8px; 
     box-shadow: 0 8px 25px rgba(var(--rgb-black), 0.4);
     background-color: #000; 
@@ -381,35 +229,17 @@ section {
     border: none;
 }
 
-h2 + p { /* Estilo global para párrafo después de H2 */
+/* Párrafo después de H2 (si se usa) */
+h2 + p { 
     font-style: italic;
     color: var(--color-text-medium); 
 }
 
-/* FOOTER */
-footer {
-    background-color: var(--color-background-surface-dark); 
-    color: var(--color-text-medium); 
-    text-align: center;
-    padding: 3rem 0;
-    border-top: 3px solid var(--color-primary-red); 
-}
-footer p {
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
-footer a {
-    color: var(--color-accent-light-blue); 
-    transition: color 0.3s ease;
-}
-footer a:hover {
-    color: var(--color-primary-red);
-}
+/* FOOTER (Renderizado por App.vue) */
+/* Los estilos del footer (fondo, color de texto, etc.) pueden estar aquí o en App.vue <style> */
+/* Si están aquí, asegúrate que no entren en conflicto con App.vue */
 
-/* ESTILOS PARA COMPONENTES DE OTRAS PÁGINAS (SI NO ESTÁN SCOPED) */
-/* .artist-card (de artistas.html original) ahora está en ArtistCard.vue <style scoped> */
-
-/* TABLAS (Para Entradas, Cronograma) */
+/* --- TABLAS BASE (Usadas en EntradasView.vue, CronogramaView.vue) --- */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -449,21 +279,17 @@ table tfoot td {
     color: var(--color-text-medium);
 }
 
-/* FORMULARIO (Para Contacto) */
-#formulario-contacto form div,
-#formulario-contacto form fieldset {
-    margin-bottom: 1.5rem;
-}
-#formulario-contacto label {
+/* --- FORMULARIOS BASE (Usado en ContactoView.vue) --- */
+label { 
     display: block;
     margin-bottom: 0.5em;
     font-weight: 500;
     color: var(--color-text-light); 
 }
-#formulario-contacto input[type="text"],
-#formulario-contacto input[type="email"],
-#formulario-contacto textarea,
-#formulario-contacto select {
+input[type="text"],
+input[type="email"],
+textarea,
+select { 
     width: 100%;
     padding: 0.8em;
     border: 1px solid var(--color-border-dark);
@@ -472,41 +298,42 @@ table tfoot td {
     font-size: 1rem;
     background-color: var(--color-background-body-dark); 
     color: var(--color-text-light); 
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
-#formulario-contacto input[type="text"]:focus,
-#formulario-contacto input[type="email"]:focus,
-#formulario-contacto textarea:focus,
-#formulario-contacto select:focus {
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus,
+select:focus {
     outline: none;
     border-color: var(--color-primary-red);
-    box-shadow: 0 0 5px rgba(var(--rgb-primary-red), 0.4);
+    box-shadow: 0 0 0 3px rgba(var(--rgb-primary-red), 0.3);
 }
-#formulario-contacto textarea {
+textarea {
     min-height: 120px;
     resize: vertical;
 }
-#formulario-contacto fieldset {
+fieldset {
     border: 1px solid var(--color-border-dark);
-    padding: 1em;
+    padding: 1.2em 1.5em; /* Ajustado */
     border-radius: 4px;
+    margin-bottom: 1.5rem; /* Espacio si está en ContactoView */
 }
-#formulario-contacto legend {
+legend {
     padding: 0 0.5em;
     font-weight: bold;
     color: var(--color-accent-light-blue); 
 }
-#formulario-contacto input[type="radio"],
-#formulario-contacto input[type="checkbox"] {
+input[type="radio"],
+input[type="checkbox"] {
     margin-right: 0.5em;
-    transform: scale(1.1);
+    transform: scale(1.1); /* Podría ser específico del componente */
     accent-color: var(--color-primary-red); 
 }
 
-/* BOTONES GENÉRICOS Y DE FORMULARIO */
-.btn,
-#formulario-contacto input[type="submit"] { /* Selector unificado */
+/* --- BOTONES GLOBALES --- */
+.btn { 
     background-color: var(--color-primary-red);
-    color: var(--color-text-light);
+    color: var(--color-text-light) !important; /* Para asegurar el color del texto en el botón */
     padding: 0.8em 1.5em;
     border: none;
     border-radius: 25px; 
@@ -516,66 +343,40 @@ table tfoot td {
     text-transform: uppercase;
     font-size: 0.9rem;
     display: inline-block;
-    margin-right: 0.5rem; /* Espacio entre botones */
-    box-shadow: 0 2px 8px rgba(var(--rgb-black), 0.2);
-    text-decoration: none;
+    text-align: center;
+    margin-right: 0.5rem; 
+    box-shadow: 0 3px 10px rgba(var(--rgb-black), 0.2);
+    text-decoration: none !important; /* Para asegurar que no haya subrayado de <router-link> */
     transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
-#formulario-contacto input[type="reset"] {
-    background-color: var(--color-border-dark); 
-    color: var(--color-text-light); 
-    padding: 0.8em 1.5em;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    font-family: 'Montserrat', sans-serif;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.9rem;
-    display: inline-block;
-    margin-right: 0.5rem;
-    box-shadow: 0 2px 8px rgba(var(--rgb-black), 0.2);
-    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
-.btn:hover, .btn:focus,
-#formulario-contacto input[type="submit"]:hover,
-#formulario-contacto input[type="submit"]:focus {
+.btn:hover, .btn:focus {
     background-color: var(--color-hover-red);
-    box-shadow: 0 4px 12px rgba(var(--rgb-black), 0.3);
-    transform: translateY(-2px);
-    text-decoration: none;
-}
-#formulario-contacto input[type="reset"]:hover,
-#formulario-contacto input[type="reset"]:focus {
-    background-color: var(--color-secondary-blue); 
-    box-shadow: 0 4px 12px rgba(var(--rgb-black), 0.3);
+    box-shadow: 0 5px 15px rgba(var(--rgb-black), 0.3);
     transform: translateY(-2px);
 }
-.btn-primary { /* Estilo adicional para botones principales si es diferente al .btn base */
-    background-color: var(--color-primary-red);
-    color: var(--color-text-light);
-    border: 2px solid transparent; /* Borde transparente para mantener tamaño en hover */
+
+.btn-primary { /* Puede heredar de .btn o tener variaciones */
+    border: 2px solid transparent; 
 }
 .btn-primary:hover {
-    background-color: var(--color-hover-red);
-    border-color: var(--color-hover-red); /* Opcional: borde del mismo color */
     transform: translateY(-3px) scale(1.03);
     box-shadow: 0 4px 15px rgba(var(--rgb-primary-red), 0.4); 
 }
-.btn-secondary { /* Para botones de "outline" */
+
+.btn-secondary { 
     background-color: transparent;
-    color: var(--color-text-light);
+    color: var(--color-text-light) !important;
     border: 2px solid var(--color-text-light);
 }
 .btn-secondary:hover {
     background-color: var(--color-text-light);
-    color: var(--color-background-body-dark); 
+    color: var(--color-background-body-dark) !important; 
     border-color: var(--color-text-light);
     transform: translateY(-3px) scale(1.03);
     box-shadow: 0 4px 15px rgba(var(--rgb-text-light), 0.2); 
 }
 
-/* BOTÓN BACK-TO-TOP */
+/* --- BOTÓN BACK-TO-TOP --- */
 .back-to-top {
     position: fixed;
     bottom: 20px;
@@ -586,7 +387,6 @@ table tfoot td {
     border-radius: 50%;
     text-decoration: none;
     font-size: 1.2rem;
-    display: block; /* Ocultar por JS si no se ha hecho scroll */
     z-index: 999;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -594,205 +394,66 @@ table tfoot td {
 .back-to-top:hover {
     background-color: var(--color-hover-red);
     transform: scale(1.1);
-    text-decoration: none;
 }
 
-/* MEDIA QUERIES GLOBALES (EXCLUYEN LA LÓGICA DEL MENÚ HAMBURGUESA DE APP.VUE) */
-@media (min-width: 901px) { /* Ajustes para pantallas más grandes que el breakpoint del menú hamburguesa */
-    #hero h2 { font-size: 2.8rem; } 
-    #hero p { font-size: 1.1rem; } 
-    /* Aquí puedes añadir estilos específicos para escritorio si los estilos del menú móvil interfieren */
-}
+/* --- MEDIA QUERIES GLOBALES --- */
+/* Los estilos del menú hamburguesa están en App.vue <style> */
 
-@media (max-width: 900px) { /* Breakpoint general para tablet (donde el menú hamburguesa de App.vue ya está activo) */
+@media (max-width: 900px) { /* Breakpoint general para tablet */
     html { font-size: 15px; }
     .container { width: 95%; } 
 
-    header .container { /* Si usas el <header> original */
-        flex-direction: column; 
-        gap: 10px;
-        padding-bottom: 0.5rem;
-    }
-    header img#logo {
-        width: 70px;
-        margin: 0 auto; 
-    }
-    header h1 {
-        font-size: 1.5rem; 
-        text-align: center;
-    }
-    
-    /* El .nav-container y nav#main-nav ul son manejados por App.vue en este breakpoint */
+    h1 { font-size: 2.4rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.5rem; }
 
-    .hero-panel {
-        padding: 2.5rem 2rem;
-        min-height: 400px;
-        max-width: 95%;
-    }
-    #hero h2 {
-        font-size: 2.4rem;
-    }
-    #hero p {
-        font-size: 1rem;
-    }
+    /* Hero Panel */
+    .hero-panel { padding: 2.5rem 2rem; min-height: 400px; max-width: 95%; }
+    #hero h2 { font-size: 2.4rem; }
+    #hero p { font-size: 1rem; }
 
-    .destacados-grid {
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-    }
-    /* #destacados article ya está en ArtistCard.vue */
-
-    /* .artist-card figure (para página artistas) */
-    /* Si .artist-card no es el componente, sino una clase global */
-    /* .artist-card figure { width: 160px; } */
+    /* Destacados Grid (Home) */
+    .destacados-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
 }
 
 @media (max-width: 600px) { /* Breakpoint general para móvil */
     html { font-size: 14px; }
-
-    header .container { /* Si usas el <header> original */
-        flex-direction: column;
-        text-align: center;
-    }
-    header img#logo {
-        width: 60px;
-        margin: 0 auto 0.5rem auto;
-    }
-     header h1 {
-        font-size: 1.6rem;
-    }
     
-    /* El menú hamburguesa es manejado por App.vue */
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.8rem; }
+    h3 { font-size: 1.4rem; }
 
-    #hero {
-        padding: 2rem 10px; 
-    }
-    .hero-panel {
-        padding: 2rem 1.5rem;
-        min-height: auto; 
-        border-radius: 15px;
-    }
-    #hero h2 {
-        font-size: 2rem;
-    }
-    #hero p {
-        font-size: 0.9rem;
-        margin-bottom: 1.2rem;
-    }
-    .hero-cta-buttons {
-        flex-direction: column; 
-        gap: 0.8rem;
-    }
-    #hero .btn-secondary {
-        width: 100%; 
-        max-width: 280px; 
-        margin-left: auto;
-        margin-right: auto;
-    }
+    /* Hero Panel */
+    #hero { padding: 2rem 10px; }
+    .hero-panel { padding: 2rem 1.5rem; min-height: auto; border-radius: 15px; }
+    #hero h2 { font-size: 2rem; }
+    #hero p { font-size: 0.9rem; margin-bottom: 1.2rem; }
+    .hero-cta-buttons { flex-direction: column; gap: 0.8rem; }
+    #hero .btn-secondary { width: 100%; max-width: 280px; margin-left: auto; margin-right: auto; }
 
-    #destacados {
-        padding-top: 2.5rem;
-        padding-bottom: 2.5rem;
-    }
+    /* Destacados (Home) */
+    #destacados { padding-top: 2.5rem; padding-bottom: 2.5rem; }
     #destacados h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
-    .destacados-grid {
-        grid-template-columns: 1fr; 
-        gap: 1.5rem;
-    }
-    /* #destacados article ya está en ArtistCard.vue */
-     /* #destacados article img.artist-thumbnail { width: 120px; height: 120px;} -> va en ArtistCard.vue */
+    .destacados-grid { grid-template-columns: 1fr; gap: 1.5rem; }
 
-
-    #video-promo {
-        padding-top: 2rem;
-        padding-bottom: 2.5rem;
-    }
-     #video-promo h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
+    /* Video Promo */
+    #video-promo { padding-top: 2rem; padding-bottom: 2.5rem; }
+    #video-promo h2 { font-size: 1.8rem; margin-bottom: 1.5rem; }
 
     /* --- TABLA RESPONSIVA (MÓVIL) --- */
-    table {
-        display: block;
-        width: 100%;
-    }
-    table caption {
-        display: block;
-        text-align: center;
-        margin-bottom: 1em;
-        font-size: 1.1em;
-        font-weight: bold;
-        color: var(--color-text-light);
-    }
-    table thead {
-        display: none;
-    }
-    table tbody, table tr, table td, table th { 
-        display: block;
-        width: 100%;
-    }
-    table tr {
-        border: 1px solid var(--color-border-dark);
-        margin-bottom: 1rem;
-        padding: 0.5rem;
-        background-color: var(--color-background-surface-dark);
-    }
-    table td {
-        border: none;
-        border-bottom: 1px dashed var(--color-border-dark);
-        position: relative;
-        padding: 0.6em 0.5em 0.6em 40%; 
-        text-align: right;
-        min-height: auto; 
-    }
-    table td:last-child {
-        border-bottom: none;
-    }
-    table td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 0.5em;
-        top: 0.6em; 
-        width: 35%; 
-        padding-right: 0.5em; 
-        white-space: normal; 
-        font-weight: bold;
-        text-align: left;
-        color: var(--color-accent-light-blue);
-    }
-    table td[data-label="Enlace de Compra"] {
-        padding: 0.8em 0.5em;
-        text-align: center;
-    }
-    table td[data-label="Enlace de Compra"]::before {
-        display: none; 
-    }
-    table td[data-label="Enlace de Compra"] .btn {
-        display: inline-block;
-        width: auto;
-        padding: 0.6em 1em;
-        font-size: 0.85rem;
-    }
-    table td[data-label="Descripción"] {
-        text-align: left;
-        padding-left: 0.5em; 
-        padding-top: 0.6em; 
-    }
-    table td[data-label="Descripción"]::before {
-        width: auto; 
-        position: relative; 
-        display: block; 
-        margin-bottom: 0.2em; 
-        top: auto; left: auto; 
-        padding-right: 0; 
-    }
+    table { display: block; width: 100%; }
+    table caption { display: block; text-align: center; margin-bottom: 1em; font-size: 1.1em; font-weight: bold; }
+    table thead { display: none; }
+    table tbody, table tr, table td, table th { display: block; width: 100%; }
+    table tr { border: 1px solid var(--color-border-dark); margin-bottom: 1rem; padding: 0.5rem; background-color: var(--color-background-surface-dark); }
+    table td { border: none; border-bottom: 1px dashed var(--color-border-dark); position: relative; padding: 0.6em 0.5em 0.6em 40%; text-align: right; min-height: auto; }
+    table td:last-child { border-bottom: none; }
+    table td::before { content: attr(data-label); position: absolute; left: 0.5em; top: 0.6em; width: 35%; padding-right: 0.5em; white-space: normal; font-weight: bold; text-align: left; color: var(--color-accent-light-blue); }
+    table td[data-label="Enlace de Compra"] { padding: 0.8em 0.5em; text-align: center; }
+    table td[data-label="Enlace de Compra"]::before { display: none; }
+    table td[data-label="Enlace de Compra"] .btn { display: inline-block; width: auto; padding: 0.6em 1em; font-size: 0.85rem; }
+    table td[data-label="Descripción"] { text-align: left; padding-left: 0.5em; padding-top: 0.6em; }
+    table td[data-label="Descripción"]::before { width: auto; position: relative; display: block; margin-bottom: 0.2em; top: auto; left: auto; padding-right: 0; }
     
-    /* Para el .artist-card de artistas.html si se usa como clase global, no el componente */
-    /* .artist-card figure { float: none; width: 150px; margin: 0 auto 1em; } */
-    /* .artist-card .artist-info { text-align: center; } */
-
-    .back-to-top {
-        padding: 8px 12px;
-        font-size: 1rem;
-        bottom: 15px;
-        right: 15px;
-    }
+    .back-to-top { padding: 8px 12px; font-size: 1rem; bottom: 15px; right: 15px; }
 }

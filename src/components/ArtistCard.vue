@@ -10,11 +10,11 @@
       <h3>{{ artist.name }}</h3>
       <p>{{ artist.description }}</p>
     </div>
-    <div v-if="artist.audioSrc" class="artist-audio">
-      <audio controls :src="getAudioUrl(artist.audioSrc)">
-        Tu navegador no soporta el elemento de audio.
-      </audio>
-    </div>
+<div v-if="artist.audioSrc" class="artist-audio">
+  <audio controls :src="getAudioUrl(artist.audioSrc)">
+    Tu navegador no soporta el elemento de audio.
+  </audio>
+</div>
   </article>
 </template>
 
