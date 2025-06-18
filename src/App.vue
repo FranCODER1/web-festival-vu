@@ -1,12 +1,11 @@
 <template>
   <div id="app-layout">
-    <nav id="main-nav">
-      <div class="nav-container">
+    <nav id="main-nav"> 
+      <div class="nav-container"> 
         <router-link to="/" id="logo-nav-link">
           <img src="@/assets/img/logo_ciudad.png" alt="Logo Sonidos de la Ciudad" id="logo-nav">
         </router-link>
 
-        <!-- Botón de Hamburguesa - Visible solo en móviles -->
         <button 
           class="hamburger-menu" 
           @click="toggleMobileMenu" 
@@ -19,7 +18,7 @@
           <span class="bar"></span>
         </button>
 
-        <!-- Enlaces de Navegación - Clase condicional para móvil -->
+     
         <ul :class="{ 'mobile-nav-active': isMobileMenuOpen }">
           <li><router-link to="/" @click="closeMobileMenu">Inicio</router-link></li>
           <li><router-link to="/artistas" @click="closeMobileMenu">Artistas</router-link></li>
@@ -61,25 +60,23 @@ export default {
   name: 'App',
   data() {
     return {
-      isMobileMenuOpen: false, // Estado para controlar si el menú móvil está abierto
+      isMobileMenuOpen: false,
     };
   },
   methods: {
     toggleMobileMenu() {
       this.isMobileMenuOpen = !this.isMobileMenuOpen;
     },
-    closeMobileMenu() { // Para cerrar el menú al hacer clic en un enlace del menú
+    closeMobileMenu() {
       this.isMobileMenuOpen = false;
     },
-    closeMobileMenuIfOpen() { // Para cerrar si se hace clic fuera del menú (en el main content)
+    closeMobileMenuIfOpen() {
       if (this.isMobileMenuOpen) {
         this.isMobileMenuOpen = false;
       }
     }
   },
   watch: {
-    // Opcional: Cerrar el menú si la ruta cambia 
-    // (útil si el usuario usa los botones de atrás/adelante del navegador)
     '$route'() {
       this.closeMobileMenu();
     }
@@ -88,6 +85,7 @@ export default {
 </script>
 
 <style>
+/* ESTILOS GLOBALES ESPECÍFICOS DE APP.VUE O AJUSTES MENORES */
 #app-layout {
   display: flex;
   flex-direction: column;
@@ -98,26 +96,37 @@ export default {
   flex-grow: 1;
 }
 
-/* Estilos para los iconos del footer */
 footer .fab, footer .fas {
   margin-right: 0.3em;
   font-size: 1.1em;
 }
 
-/* Estilo para el icono en el botón de entradas del nav */
 .nav-button-cta i.fas {
   margin-right: 0.5em;
 }
 
+/* Estilos para .nav-container (si no están ya en estilos.css global o para asegurar precedencia) */
+/* Y ASEGURAR position:relative para el menú absoluto */
+nav#main-nav .nav-container {
+  width: 90%; 
+  max-width: 1300px; 
+  margin: 0 auto;
+  padding: 0 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative; /* Clave para el posicionamiento del menú desplegable absoluto */
+}
+
 /* --- ESTILOS HAMBURGUESA Y MENÚ MÓVIL --- */
 .hamburger-menu {
-  display: none; /* Oculto por defecto, se mostrará con media query */
+  display: none; 
   background: none;
   border: none;
   cursor: pointer;
-  padding: 10px; /* Área de toque */
-  z-index: 1010; /* Asegurar que esté por encima del contenido del nav */
-  margin-left: auto; /* Para empujarlo a la derecha si es necesario */
+  padding: 10px; 
+  z-index: 1010; /* Encima del menú desplegable */
+  margin-left: auto; 
 }
 
 .hamburger-menu .bar {
@@ -125,11 +134,10 @@ footer .fab, footer .fas {
   width: 25px;
   height: 3px;
   margin: 5px auto;
-  background-color: var(--color-text-light); /* Color de las barras */
+  background-color: var(--color-text-light); 
   transition: all 0.3s ease-in-out;
 }
 
-/* Animación para convertir hamburguesa en 'X' cuando está activo */
 .hamburger-menu.is-active .bar:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
 }
@@ -140,93 +148,88 @@ footer .fab, footer .fas {
   transform: translateY(-8px) rotate(-45deg);
 }
 
-/* Estilos para el nav en móvil */
-/* AJUSTA ESTE BREAKPOINT (900px) SEGÚN TUS NECESIDADES */
-@media (max-width: 900px) { 
-  .nav-container {
-    /* Si el logo y la hamburguesa no se alinean bien, puedes usar flex aquí también */
-    /* display: flex; */
-    /* justify-content: space-between; */
-    /* align-items: center; */
-  }
-
+@media (max-width: 900px) { /* AJUSTA ESTE BREAKPOINT SEGÚN NECESITES */
   .hamburger-menu {
-    display: block; /* Mostrar el botón de hamburguesa */
+    display: block; 
   }
 
-  /* Ocultar la lista de enlaces de escritorio por defecto en móvil */
+  /* Estilos para el UL cuando está en modo "MENÚ DESPLEGABLE MÓVIL" */
+  /* El selector es nav#main-nav ul para que coincida con los estilos de escritorio en especificidad */
   nav#main-nav ul {
-    display: none; 
+    /* Por defecto en móvil (sin .mobile-nav-active), está oculto */
+    display: none;
+    
+    /* Estilos para cuando SÍ está activo y desplegado */
     flex-direction: column;
-    position: absolute; 
-    top: 100%;
+    align-items: stretch; 
+    position: absolute;             
+    top: 100%; /* Relativo a .nav-container */                     
     left: 0;
-    width: 100%;
-    /* Un color de fondo ligeramente diferente al del navbar para el menú desplegable */
-    background-color: rgba(var(--rgb-secondary-blue), 0.98); /* Un poco más opaco */
-    -webkit-backdrop-filter: blur(8px); /* Desenfoque más sutil para el menú */
+    width: 100%;       
+    background-color: rgba(var(--rgb-secondary-blue), 0.98); /* Fondo del menú desplegado */
+    -webkit-backdrop-filter: blur(8px); 
     backdrop-filter: blur(8px);
-    padding: 0.5rem 0; /* Menos padding vertical */
+    padding: 0.5rem 0; 
     box-shadow: 0 5px 15px rgba(var(--rgb-black), 0.35);
-    z-index: 1005; /* Debajo del botón hamburguesa si es necesario, pero encima del contenido */
+    z-index: 1005; /* Debe estar por encima del contenido de la página (main) */
+                   /* pero debajo del botón hamburguesa (que tiene 1010) */
     border-top: 1px solid rgba(var(--rgb-text-light), 0.15);
   }
 
-  /* Mostrar la lista cuando el menú móvil está activo */
   nav#main-nav ul.mobile-nav-active {
-    display: flex; 
+    display: flex !important; /* Fuerza la visualización. Si esto funciona, luego intentamos quitar !important */
   }
-
+  
   nav#main-nav ul li {
-    margin: 0;
+    margin: 0; /* Sobrescribe el margen de escritorio */
     width: 100%;
-    text-align: left; /* Alinear texto a la izquierda en el menú desplegable */
+    text-align: left; 
   }
 
   nav#main-nav ul li a {
-    padding: 0.9em 1.5em; /* Padding para los items */
-    display: block; /* Para que ocupen todo el ancho del li */
+    padding: 0.9em 1.5em; 
+    display: block; 
     border-bottom: 1px solid rgba(var(--rgb-text-light), 0.1);
     font-size: 1rem; 
-    color: var(--color-text-light); /* Asegurar color de texto */
-    text-transform: uppercase; /* Mantener mayúsculas */
-    font-weight: 500; /* Mantener peso */
+    color: var(--color-text-light); 
+    text-transform: uppercase; 
+    font-weight: 500; 
+    position: static; /* Evitar position:relative del hover de escritorio si interfiere */
   }
+  nav#main-nav ul li a::before { /* Ocultar la línea animada de escritorio en el menú móvil */
+    display: none;
+  }
+
 
   nav#main-nav ul li:last-child a {
     border-bottom: none;
   }
 
-  /* Estilo para el botón CTA dentro del menú móvil */
   nav#main-nav ul li a.nav-button-cta {
-    margin: 0.75rem auto; /* Centrar el botón y dar espacio */
-    width: calc(100% - 3rem); /* Ancho con padding a los lados */
-    max-width: 280px; /* Ancho máximo para el botón */
-    display: block; /* Para que margin: auto funcione */
+    margin: 0.75rem auto; 
+    width: calc(100% - 3rem); 
+    max-width: 280px; 
+    display: block; 
     text-align: center;
-    border-radius: 25px; /* Mantener bordes redondeados */
-    background-color: var(--color-primary-red); /* Color de fondo del CTA */
-    color: var(--color-text-light) !important; /* Asegurar color de texto del CTA */
-    padding: 0.8em 1em; /* Padding del CTA */
-    border-bottom: none; /* Quitar borde inferior del CTA */
+    border-radius: 25px; 
+    background-color: var(--color-primary-red); 
+    color: var(--color-text-light) !important; 
+    padding: 0.8em 1em; 
+    border-bottom: none; 
   }
-   nav#main-nav ul li a.nav-button-cta:hover {
-       background-color: var(--color-hover-red) !important;
-   }
+  nav#main-nav ul li a.nav-button-cta:hover {
+      background-color: var(--color-hover-red) !important;
+  }
 
-   /* Quitar efectos de hover de escritorio si no se desean en el menú móvil */
-   nav#main-nav ul li a:hover,
-   nav#main-nav ul li a:focus {
-      background-color: rgba(var(--rgb-primary-red), 0.2); /* Un hover sutil en los items */
-      color: var(--color-text-light);
+  nav#main-nav ul li a:hover,
+  nav#main-nav ul li a:focus {
+      background-color: rgba(var(--rgb-primary-red), 0.2); 
       transform: none; 
-   }
-    nav#main-nav ul li a.active { /* Estilo para el link activo en el menú móvil */
-        background-color: var(--color-primary-red);
-        color: var(--color-text-light) !important;
-    }
-   nav#main-nav ul li a.active::before { /* Ocultar línea de "active" de escritorio */
-       display: none;
-   }
+  }
+  nav#main-nav ul li a.active { 
+      background-color: var(--color-primary-red);
+      color: var(--color-text-light) !important;
+  }
+  /* nav#main-nav ul li a.active::before ya está display:none arriba */
 }
 </style>

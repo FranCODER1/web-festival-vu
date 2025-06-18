@@ -57,7 +57,7 @@ export default {
           id: 3,
           name: 'Horacio Banegas',
           description: 'Compositor, cantante y guitarrista de enorme talento y profundidad. Su obra es extensa y muy respetada, con un fuerte anclaje en la poesía y la música de Santiago. Voz potente y gran presencia escénica.',
-          imageSrc: 'img/horacio_banegas+.jpg', // Cuidado con el '+' si da problemas. Renombrar sería ideal.
+          imageSrc: 'img/horacio_banegas+.jpg',
           imageAlt: 'Foto de Horacio Banegas',
           audioSrc: 'audio/Hermano Kakuy (original).mp3'
         },
@@ -81,9 +81,9 @@ export default {
           id: 6,
           name: 'Los Arcanos del Desierto',
           description: 'Innovadora propuesta que fusiona el folclore con sonidos contemporáneos y electrónicos, manteniendo la esencia de la música de Santiago del Estero.',
-          imageSrc: 'img/arcanos.jpeg', // Asegúrate que el nombre y extensión sean correctos
+          imageSrc: 'img/arcanos.jpeg',
           imageAlt: 'Foto de Los Arcanos del Desierto',
-          audioSrc: 'audio/Los Arcanos del Desierto - No se que tiene la guaracha.mp3' // Añade si tienes audio para ellos (asegúrate que el archivo exista)
+          audioSrc: 'audio/Los Arcanos del Desierto - No se que tiene la guaracha.mp3'
         }
       ],
       generosMusicales: [
@@ -99,7 +99,6 @@ export default {
 </script>
 
 <style scoped>
-/* Tus estilos scoped permanecen igual */
 .artistas-page-content {
   padding-top: 2rem;
   padding-bottom: 2rem;
@@ -112,10 +111,10 @@ export default {
   font-size: 2.5rem;
 }
 
-.artist-list-grid {
+.artist-list-grid { /* Este es para la página de Artistas */
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Un poco más anchas que en home */
+  gap: 2.5rem; /* Un poco más de espacio */
   margin-bottom: 3rem;
 }
 
@@ -155,20 +154,16 @@ export default {
   font-size: 0.9rem;
 }
 
-@media (max-width: 900px) {
-  .artist-list-grid {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  }
-}
-
+/* No se necesitan media queries específicas para artist-list-grid aquí
+   si auto-fit ya maneja la responsividad. */
 @media (max-width: 600px) {
   #lineup h1 {
     font-size: 2rem;
   }
-  .artist-list-grid {
-    grid-template-columns: 1fr;
+  /* .artist-list-grid {
+    grid-template-columns: 1fr; // auto-fit ya debería manejar esto
     gap: 1.5rem;
-  }
+  } */
   #generos ul {
     justify-content: flex-start;
   }
