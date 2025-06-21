@@ -1,4 +1,3 @@
-// src/views/ContactoView.vue
 <template>
   <main class="contacto-page-content">
     <div class="container">
@@ -21,23 +20,28 @@
 
         <section id="formulario-contacto" class="formulario-wrapper">
           <h2>Formulario de Contacto</h2>
-          <form @submit.prevent="enviarFormulario" name="contacto-festival" data-netlify="true" data-netlify-honeypot="bot-field">
+          {/* El action y method aquí son más para la semántica y fallback, Netlify se basa en el _form.html para la detección inicial y el JS para el envío */}
+          <form @submit.prevent="enviarFormulario" name="contacto-festival" data-netlify="true" data-netlify-honeypot="bot-field" action="/contacto/gracias/">
+            {/* Input oculto para el nombre del formulario que Netlify necesita */}
             <input type="hidden" name="form-name" value="contacto-festival" />
+            {/* Campo Honeypot */}
             <p class="hidden-field" style="display:none;">
               <label>No llenar este campo si eres humano: <input name="bot-field" v-model="formData['bot-field']" /></label>
             </p>
 
             <div>
               <label for="nombre">Nombre Completo:</label>
-              <input type="text" id="nombre" name="nombre" v-model="formData.nombre" required placeholder="Ej: Ana Pérez">
+              <input type="text" id="nombre" name="nombre" v-model="formData.nombre" placeholder="Ej: Ana Pérez">
+              <span v-if="errors.nombre" class="error-text">{{ errors.nombre }}</span>
             </div>
             <div>
               <label for="email">Correo Electrónico:</label>
-              <input type="email" id="email" name="email" v-model="formData.email" required placeholder="Ej: ana.perez@correo.com">
+              <input type="email" id="email" name="email" v-model="formData.email" placeholder="Ej: ana.perez@correo.com">
+              <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
             </div>
             <div>
               <label for="asunto">Asunto:</label>
-              <input type="text" id="asunto" name="asunto" v-model="formData.asunto" required list="sugerencias-asunto">
+              <input type="text" id="asunto" name="asunto" v-model="formData.asunto" list="sugerencias-asunto">
               <datalist id="sugerencias-asunto">
                 <option value="Consulta General"></option>
                 <option value="Propuesta Artística"></option>
@@ -45,10 +49,12 @@
                 <option value="Problema con Entradas"></option>
                 <option value="Sugerencias"></option>
               </datalist>
+              <span v-if="errors.asunto" class="error-text">{{ errors.asunto }}</span>
             </div>
             <div>
               <label for="mensaje">Mensaje:</label>
-              <textarea id="mensaje" name="mensaje" rows="5" v-model="formData.mensaje" required placeholder="Escribe tu mensaje aquí..."></textarea>
+              <textarea id="mensaje" name="mensaje" rows="5" v-model="formData.mensaje" placeholder="Escribe tu mensaje aquí..."></textarea>
+              <span v-if="errors.mensaje" class="error-text">{{ errors.mensaje }}</span>
             </div>
             <div>
               <label for="tipo-contacto">Motivo principal de contacto:</label>
@@ -60,6 +66,7 @@
                 <option value="sponsor">Sponsorización</option>
                 <option value="otro">Otro</option>
               </select>
+              <span v-if="errors.tipoContacto" class="error-text">{{ errors.tipoContacto }}</span>
             </div>
             <fieldset>
               <legend>¿Cómo prefieres que te contactemos?</legend>
@@ -73,12 +80,11 @@
               </label>
             </fieldset>
             
-            <div v-if="mensajeError" class="mensaje-error">
-              {{ mensajeError }}
+            <div v-if="mensajeErrorGeneral" class="mensaje-error">
+              {{ mensajeErrorGeneral }}
             </div>
-            <div v-if="mensajeEnviado" class="mensaje-confirmacion">
-              ¡Gracias! Tu mensaje ha sido enviado.
-            </div>
+            {/* El mensaje de confirmación ya no es necesario aquí si rediriges a una página de gracias */}
+            {/* <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p> */}
 
             <div class="form-actions">
               <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
@@ -104,86 +110,111 @@ export default {
         asunto: '',
         mensaje: '',
         tipoContacto: '',
-        preferenciaContacto: 'email',
-        'form-name': 'contacto-festival', // IMPORTANTE: Coincide con el name del form HTML
+        preferenciaContacto: 'email', // Valor por defecto
+        'form-name': 'contacto-festival', // Necesario para Netlify
         'bot-field': '' // Campo Honeypot
       },
-      isSubmitting: false, // Para deshabilitar el botón durante el envío
-      mensajeEnviado: false,
-      mensajeError: ''
+      isSubmitting: false,
+      mensajeErrorGeneral: '',
+      errors: { // Para errores específicos de cada campo
+        nombre: '',
+        email: '',
+        asunto: '', // Aunque HTML 'required' lo maneja, podemos añadir mensaje
+        mensaje: '',
+        tipoContacto: ''
+      }
     };
   },
   methods: {
-    encode(data) { // Helper para codificar los datos del formulario
+    encode(data) {
       return Object.keys(data)
         .map(
           key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
         )
         .join("&");
     },
-    async enviarFormulario() {
-      if (this.isSubmitting) return; // Evitar envíos múltiples
+    validateForm() {
+      // Resetear errores antes de cada validación
+      this.errors = { nombre: '', email: '', asunto: '', mensaje: '', tipoContacto: '' };
+      let isValid = true;
+
+      if (!this.formData.nombre.trim()) {
+        this.errors.nombre = 'El nombre completo es obligatorio.';
+        isValid = false;
+      }
+      if (!this.formData.email.trim()) {
+        this.errors.email = 'El correo electrónico es obligatorio.';
+        isValid = false;
+      } else {
+        const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+        if (!emailRegex.test(this.formData.email)) {
+          this.errors.email = 'Por favor, ingresa un formato de correo electrónico válido.';
+          isValid = false;
+        }
+      }
+      if (!this.formData.asunto.trim()) {
+        this.errors.asunto = 'El asunto es obligatorio.';
+        // HTML5 'required' ya lo maneja, pero podemos añadir este mensaje si se quiere más control
+        // isValid = false; // Descomentar si quieres forzar validación Vue incluso si HTML5 está
+      }
+      if (!this.formData.mensaje.trim()) {
+        this.errors.mensaje = 'El mensaje es obligatorio.';
+        isValid = false;
+      }
+      if (!this.formData.tipoContacto) {
+        this.errors.tipoContacto = 'Por favor, selecciona un motivo de contacto.';
+        isValid = false;
+      }
+      return isValid;
+    },
+async enviarFormulario() {
+      this.mensajeErrorGeneral = ''; 
+      if (!this.validateForm()) {
+        this.isSubmitting = false; 
+        return; 
+      }
+
+      if (this.isSubmitting) return;
       this.isSubmitting = true;
-      this.mensajeError = '';
-      this.mensajeEnviado = false;
-
-      // Validación básica (la mejoraremos en la Parte 2)
-      if (!this.formData.nombre || !this.formData.email || !this.formData.mensaje) {
-        this.mensajeError = "Por favor, completa los campos obligatorios (Nombre, Email, Mensaje).";
-        this.isSubmitting = false;
-        return;
-      }
-      if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.formData.email)) {
-          this.mensajeError = "Por favor, ingresa un correo electrónico válido.";
-          this.isSubmitting = false;
-          return;
-      }
-
+      
+      const formDataEncoded = this.encode({ 
+        "form-name": "contacto-festival", // Este es el nombre que Netlify espera
+        "bot-field": this.formData['bot-field'],
+        nombre: this.formData.nombre,
+        email: this.formData.email,
+        asunto: this.formData.asunto,
+        mensaje: this.formData.mensaje,
+        tipoContacto: this.formData.tipoContacto,
+        preferencia_contacto: this.formData.preferenciaContacto 
+      });
 
       try {
-        const response = await fetch("/", { // Netlify procesa envíos a la URL raíz del sitio
+        await fetch("/", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: this.encode({ 
-            "form-name": this.formData['form-name'], // Asegúrate que el nombre del form se envíe
-            "bot-field": this.formData['bot-field'], // Honeypot
-            nombre: this.formData.nombre,
-            email: this.formData.email,
-            asunto: this.formData.asunto,
-            mensaje: this.formData.mensaje,
-            tipoContacto: this.formData.tipoContacto,
-            preferencia_contacto: this.formData.preferenciaContacto // Nota: Netlify usa el 'name' del input
-          })
+          body: formDataEncoded
         });
-
-        if (response.ok) {
-          this.mensajeEnviado = true;
-          this.limpiarFormulario(); // Limpia el formulario después del éxito
-        } else {
-          // Intenta obtener un mensaje de error de la respuesta si es posible
-          const errorData = await response.text(); // O .json() si Netlify devuelve JSON
-          this.mensajeError = `Hubo un problema al enviar tu mensaje. Código: ${response.status}. ${errorData}`;
-          console.error("Error en el envío a Netlify:", response);
-        }
+        this.$router.push({ name: 'graciasContacto' }); 
       } catch (error) {
         console.error("Error de red o JavaScript al enviar formulario:", error);
-        this.mensajeError = "Hubo un error de red al enviar tu mensaje. Inténtalo de nuevo.";
+        this.mensajeErrorGeneral = "Hubo un error de red al enviar tu mensaje. Por favor, revisa tu conexión e inténtalo de nuevo.";
       } finally {
-        this.isSubmitting = false;
+        this.isSubmitting = false; 
       }
     },
     limpiarFormulario() {
-      this.formData.nombre = '';
-      this.formData.email = '';
-      this.formData.asunto = '';
-      this.formData.mensaje = '';
-      this.formData.tipoContacto = '';
-      this.formData.preferenciaContacto = 'email';
-      this.formData['bot-field'] = ''; // También limpia el honeypot
-      // this.mensajeEnviado = false; // No resetear este, se oculta con timeout
-      setTimeout(() => {
-        this.mensajeEnviado = false;
-      }, 5000);
+      this.formData = {
+        nombre: '',
+        email: '',
+        asunto: '',
+        mensaje: '',
+        tipoContacto: '',
+        preferenciaContacto: 'email',
+        'form-name': 'contacto-festival',
+        'bot-field': ''
+      };
+      this.errors = { nombre: '', email: '', asunto: '', mensaje: '', tipoContacto: '' }; // También limpia los errores
+      this.mensajeErrorGeneral = '';
     }
   }
 }
@@ -201,7 +232,7 @@ export default {
   color: var(--color-primary-red);
   font-size: 2.5rem;
 }
-#titulo-contacto > .container > p { /* Párrafo introductorio */
+#titulo-contacto > .container > p {
   text-align: center;
   color: var(--color-text-medium);
   margin-bottom: 2.5rem;
@@ -210,13 +241,13 @@ export default {
 
 .contacto-layout {
   display: grid;
-  grid-template-columns: 1fr; /* Apilado por defecto */
+  grid-template-columns: 1fr;
   gap: 2rem;
 }
 
-@media (min-width: 768px) { /* Dos columnas en pantallas más grandes */
+@media (min-width: 768px) {
   .contacto-layout {
-    grid-template-columns: 1fr 2fr; /* Info a la izquierda, formulario a la derecha más grande */
+    grid-template-columns: 1fr 2fr;
   }
 }
 
@@ -234,109 +265,56 @@ export default {
   padding-bottom: 0.5rem;
 }
 
-.info-directa p {
-    margin-bottom: 0.8rem;
-}
-.info-directa p strong {
-    color: var(--color-text-light);
-}
+.info-directa p { margin-bottom: 0.8rem; }
+.info-directa p strong { color: var(--color-text-light); }
 
-.lista-redes {
-    list-style: none;
-    padding-left: 0;
-}
-.lista-redes li {
-    margin-bottom: 0.5rem;
-}
-.lista-redes li a {
-    color: var(--color-text-medium);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-.lista-redes li a:hover {
-    color: var(--color-primary-red);
-}
-.lista-redes li i { /* Para iconos de Font Awesome */
-    margin-right: 0.5em;
-    color: var(--color-accent-light-blue);
-    width: 1.2em; /* Para alinear iconos */
-    text-align: center;
-}
+.lista-redes { list-style: none; padding-left: 0; }
+.lista-redes li { margin-bottom: 0.5rem; }
+.lista-redes li a { color: var(--color-text-medium); text-decoration: none; transition: color 0.3s ease; }
+.lista-redes li a:hover { color: var(--color-primary-red); }
+.lista-redes li i { margin-right: 0.5em; color: var(--color-accent-light-blue); width: 1.2em; text-align: center; }
 
-
-/* Estilos del formulario (muchos vienen de estilos.css global para inputs, labels) */
 #formulario-contacto form div,
 #formulario-contacto form fieldset {
-  margin-bottom: 1.2rem; /* Un poco menos de margen */
-}
-/* Label y input ya deberían tener estilos globales */
-
-#formulario-contacto fieldset {
-  padding: 1em 1.2em;
-}
-#formulario-contacto legend {
-  padding: 0 0.5em;
+  margin-bottom: 1.2rem;
 }
 
-.radio-label { /* Para mejor alineación y clickeabilidad de radios */
-    display: block; /* O inline-block con margen si los quieres en línea */
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-}
-.radio-label input[type="radio"] {
-    margin-right: 0.5em;
-    vertical-align: middle;
-}
+.radio-label { display: block; margin-bottom: 0.5rem; cursor: pointer; }
+.radio-label input[type="radio"] { margin-right: 0.5em; vertical-align: middle; }
 
-.form-actions {
-    margin-top: 1.5rem;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap; /* Para que los botones se apilen en móvil si no caben */
-}
-/* Estilos para .btn y .btn-primary ya están en global */
-.btn-outline { /* Estilo para el botón de limpiar */
-    background-color: transparent;
-    color: var(--color-accent-light-blue);
-    border: 1px solid var(--color-accent-light-blue);
+.form-actions { margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--color-accent-light-blue);
+  border: 1px solid var(--color-accent-light-blue);
 }
 .btn-outline:hover {
-    background-color: var(--color-accent-light-blue);
-    color: var(--color-background-surface-dark);
+  background-color: var(--color-accent-light-blue);
+  color: var(--color-background-surface-dark);
 }
 
-.mensaje-confirmacion {
-    margin-top: 1.5rem;
-    padding: 1em;
-    background-color: rgba(var(--color-accent-light-blue), 0.2);
-    border: 1px solid var(--color-accent-light-blue);
-    color: var(--color-text-light);
-    border-radius: 4px;
-    text-align: center;
+.mensaje-error, .error-text { /* Unificado el estilo de error general y por campo */
+  margin-top: 0.5rem; /* Ajustado para errores por campo */
+  padding: 0.8em 1em;
+  background-color: rgba(var(--color-primary-red), 0.15);
+  border: 1px solid var(--color-primary-red);
+  color: var(--color-primary-red);
+  border-radius: 4px;
 }
+.error-text { /* Específico para errores de campo, más pequeño */
+    font-size: 0.875em;
+    padding: 0.4em 0.6em;
+    margin-top: 0.25rem;
+    background-color: transparent; /* Sin fondo para errores de campo inline */
+    border: none; /* Sin borde para errores de campo inline */
+    /* border-left: 3px solid var(--color-primary-red); /* O un indicador sutil */
+    /* padding-left: 0.5em; */
+}
+.hidden-field { display: none !important; visibility: hidden !important; position: absolute !important; left: -9999px !important; }
 
 @media (max-width: 768px) {
-  #titulo-contacto h1 {
-    font-size: 2rem;
-  }
-   .info-directa h2, .formulario-wrapper h2 {
-    font-size: 1.5rem; /* Ajustar tamaño de H2 en secciones */
-  }
-}
-
-.mensaje-error {
-    margin-top: 1.5rem;
-    padding: 1em;
-    background-color: rgba(var(--color-primary-red), 0.15); /* Fondo rojo claro */
-    border: 1px solid var(--color-primary-red);
-    color: var(--color-primary-red); /* Texto rojo */
-    border-radius: 4px;
-    text-align: center;
-}
-.hidden-field { /* Para asegurar que el honeypot esté realmente oculto */
-    display: none !important;
-    visibility: hidden !important;
-    position: absolute !important;
-    left: -9999px !important;
+  #titulo-contacto h1 { font-size: 2rem; }
+  .info-directa h2, .formulario-wrapper h2 { font-size: 1.5rem; }
 }
 </style>

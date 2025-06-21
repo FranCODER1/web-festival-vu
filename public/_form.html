@@ -2,8 +2,7 @@
 <html lang="en">
 <head><meta charset="UTF-8"><title>Netlify Form Placeholder</title></head>
 <body>
-  {/* Este formulario es solo para la detección de Netlify, no se muestra */}
-  <form name="contacto-festival" netlify netlify-honeypot="bot-field" hidden>
+  <form name="contacto-festival" netlify netlify-honeypot="bot-field" hidden action="/contacto/gracias/">
     <input type="hidden" name="form-name" value="contacto-festival" />
     <p class="hidden" style="display:none;">
       <label>No llenar este campo si eres humano: <input name="bot-field" /></label>
@@ -14,7 +13,6 @@
     <textarea name="mensaje"></textarea>
     <select name="tipo-contacto">
       <option value="info_general">Información General</option>
-      {/* ... otras opciones ... */}
     </select>
     <input type="radio" name="preferencia_contacto" value="email" />
     <input type="radio" name="preferencia_contacto" value="telefono" />
