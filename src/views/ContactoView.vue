@@ -21,7 +21,12 @@
 
         <section id="formulario-contacto" class="formulario-wrapper">
           <h2>Formulario de Contacto</h2>
-          <form @submit.prevent="enviarFormulario">
+          <form @submit.prevent="enviarFormulario" name="contacto-festival" data-netlify="true" data-netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="contacto-festival" />
+            <p class="hidden-field" style="display:none;">
+              <label>No llenar este campo si eres humano: <input name="bot-field" v-model="formData['bot-field']" /></label>
+            </p>
+
             <div>
               <label for="nombre">Nombre Completo:</label>
               <input type="text" id="nombre" name="nombre" v-model="formData.nombre" required placeholder="Ej: Ana Pérez">
@@ -67,12 +72,21 @@
                 Teléfono (si lo proporcionaste)
               </label>
             </fieldset>
+            
+            <div v-if="mensajeError" class="mensaje-error">
+              {{ mensajeError }}
+            </div>
+            <div v-if="mensajeEnviado" class="mensaje-confirmacion">
+              ¡Gracias! Tu mensaje ha sido enviado.
+            </div>
+
             <div class="form-actions">
-              <button type="submit" class="btn btn-primary">Enviar Mensaje</button>
-              <button type="button" @click="limpiarFormulario" class="btn btn-outline">Limpiar Formulario</button>
+              <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
+                {{ isSubmitting ? 'Enviando...' : 'Enviar Mensaje' }}
+              </button>
+              <button type="button" @click="limpiarFormulario" class="btn btn-outline" :disabled="isSubmitting">Limpiar Formulario</button>
             </div>
           </form>
-          <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p>
         </section>
       </div>
     </div>
@@ -90,37 +104,86 @@ export default {
         asunto: '',
         mensaje: '',
         tipoContacto: '',
-        preferenciaContacto: 'email' // Valor por defecto
+        preferenciaContacto: 'email',
+        'form-name': 'contacto-festival', // IMPORTANTE: Coincide con el name del form HTML
+        'bot-field': '' // Campo Honeypot
       },
-      mensajeEnviado: false
+      isSubmitting: false, // Para deshabilitar el botón durante el envío
+      mensajeEnviado: false,
+      mensajeError: ''
     };
   },
   methods: {
-    enviarFormulario() {
-      // Aquí iría la lógica para enviar el formulario
-      // Por ejemplo, usando fetch() o axios para enviarlo a un backend o servicio
-      console.log('Datos del formulario:', this.formData);
-      
-      // Simulación de envío exitoso
-      this.mensajeEnviado = true;
-      // Opcional: Limpiar formulario después de un envío exitoso
-      // this.limpiarFormulario(); 
-      
-      // Opcional: Ocultar el mensaje después de unos segundos
-      setTimeout(() => {
-        this.mensajeEnviado = false;
-      }, 5000); // 5 segundos
+    encode(data) { // Helper para codificar los datos del formulario
+      return Object.keys(data)
+        .map(
+          key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
+        )
+        .join("&");
+    },
+    async enviarFormulario() {
+      if (this.isSubmitting) return; // Evitar envíos múltiples
+      this.isSubmitting = true;
+      this.mensajeError = '';
+      this.mensajeEnviado = false;
+
+      // Validación básica (la mejoraremos en la Parte 2)
+      if (!this.formData.nombre || !this.formData.email || !this.formData.mensaje) {
+        this.mensajeError = "Por favor, completa los campos obligatorios (Nombre, Email, Mensaje).";
+        this.isSubmitting = false;
+        return;
+      }
+      if (!/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(this.formData.email)) {
+          this.mensajeError = "Por favor, ingresa un correo electrónico válido.";
+          this.isSubmitting = false;
+          return;
+      }
+
+
+      try {
+        const response = await fetch("/", { // Netlify procesa envíos a la URL raíz del sitio
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: this.encode({ 
+            "form-name": this.formData['form-name'], // Asegúrate que el nombre del form se envíe
+            "bot-field": this.formData['bot-field'], // Honeypot
+            nombre: this.formData.nombre,
+            email: this.formData.email,
+            asunto: this.formData.asunto,
+            mensaje: this.formData.mensaje,
+            tipoContacto: this.formData.tipoContacto,
+            preferencia_contacto: this.formData.preferenciaContacto // Nota: Netlify usa el 'name' del input
+          })
+        });
+
+        if (response.ok) {
+          this.mensajeEnviado = true;
+          this.limpiarFormulario(); // Limpia el formulario después del éxito
+        } else {
+          // Intenta obtener un mensaje de error de la respuesta si es posible
+          const errorData = await response.text(); // O .json() si Netlify devuelve JSON
+          this.mensajeError = `Hubo un problema al enviar tu mensaje. Código: ${response.status}. ${errorData}`;
+          console.error("Error en el envío a Netlify:", response);
+        }
+      } catch (error) {
+        console.error("Error de red o JavaScript al enviar formulario:", error);
+        this.mensajeError = "Hubo un error de red al enviar tu mensaje. Inténtalo de nuevo.";
+      } finally {
+        this.isSubmitting = false;
+      }
     },
     limpiarFormulario() {
-      this.formData = {
-        nombre: '',
-        email: '',
-        asunto: '',
-        mensaje: '',
-        tipoContacto: '',
-        preferenciaContacto: 'email'
-      };
-      this.mensajeEnviado = false; // También resetea el mensaje de confirmación
+      this.formData.nombre = '';
+      this.formData.email = '';
+      this.formData.asunto = '';
+      this.formData.mensaje = '';
+      this.formData.tipoContacto = '';
+      this.formData.preferenciaContacto = 'email';
+      this.formData['bot-field'] = ''; // También limpia el honeypot
+      // this.mensajeEnviado = false; // No resetear este, se oculta con timeout
+      setTimeout(() => {
+        this.mensajeEnviado = false;
+      }, 5000);
     }
   }
 }
@@ -259,5 +322,21 @@ export default {
    .info-directa h2, .formulario-wrapper h2 {
     font-size: 1.5rem; /* Ajustar tamaño de H2 en secciones */
   }
+}
+
+.mensaje-error {
+    margin-top: 1.5rem;
+    padding: 1em;
+    background-color: rgba(var(--color-primary-red), 0.15); /* Fondo rojo claro */
+    border: 1px solid var(--color-primary-red);
+    color: var(--color-primary-red); /* Texto rojo */
+    border-radius: 4px;
+    text-align: center;
+}
+.hidden-field { /* Para asegurar que el honeypot esté realmente oculto */
+    display: none !important;
+    visibility: hidden !important;
+    position: absolute !important;
+    left: -9999px !important;
 }
 </style>

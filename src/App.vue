@@ -39,7 +39,7 @@
         <li><router-link to="/cronograma" @click="closeMobileMenu">Cronograma</router-link></li>
         <li><router-link to="/ubicacion" @click="closeMobileMenu">Ubicación</router-link></li>
         <li><router-link to="/contacto" @click="closeMobileMenu">Contacto</router-link></li>
-        <li> {/* Botón Entradas DENTRO del menú móvil */}
+        <li>
           <router-link to="/entradas" class="nav-button-cta-mobile" @click="closeMobileMenu">
             <i class="fas fa-ticket-alt"></i> Entradas
           </router-link>

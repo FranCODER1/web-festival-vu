@@ -61,7 +61,6 @@
 
 export default {
   name: 'HomeView',
-  // components: {}, // Ya no se registra ArtistCard
   data() {
     return {
       artistasDestacados: [
@@ -131,14 +130,8 @@ export default {
 /* Estilos específicos para HomeView.vue */
 
 .home-page-content {
-  /* Si necesitas algún padding general para el main de la home */
 }
 
-/* Estilos para el hero panel (pueden estar aquí o en estilos.css global si son idénticos) */
-/* Si ya están en estilos.css, no necesitas repetirlos aquí. */
-/* Si los pones aquí, serían específicos para el hero de HomeView */
-
-/* Estilos para las tarjetas de artista en la sección destacados */
 .destacados-artist-card {
   background-color: var(--color-background-surface-dark);
   padding: 1.5rem;
@@ -179,27 +172,4 @@ export default {
   margin-bottom: 0; /* Sin margen inferior si no hay audio */
   line-height: 1.5;
 }
-
-/* Los estilos para #hero, .hero-panel, #destacados, .destacados-grid, #video-promo, .video-responsive-wrapper */
-/* deberían venir de tu estilos.css global si quieres que sean consistentes o tener una base. */
-/* Si quieres que sean únicos para HomeView, defínelos aquí. */
-
-/* Ejemplo si .destacados-grid necesita estilos específicos aquí y no del global: */
-/*
-#destacados {
-    background-color: var(--color-background-surface-dark); 
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-}
-#destacados h2 {
-    text-align: center;
-    margin-bottom: 2.5rem;
-    color: var(--color-primary-red);
-}
-.destacados-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-    gap: 2rem;
-}
-*/
 </style>
