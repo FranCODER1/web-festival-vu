@@ -39,7 +39,6 @@
         <div v-else class="loading-placeholder">
           <p>El cronograma completo se anunciará próximamente.</p>
         </div>
-
       </section>
     </div>
   </main>
@@ -52,34 +51,31 @@ export default {
     return {
       diasDelFestival: [
         {
-          fechaISO: '2024-08-15', // Jueves
-          nombreDia: 'Día 1: Apertura Folklórica',
+          fechaISO: '2024-08-15', nombreDia: 'Día 1: Apertura Folklórica',
           eventos: [
-            { id: 'd1e1', hora: '18:00 - 19:00', artista: 'Apertura Ballet Local', escenario: 'Principal Sol', descripcion: 'Danzas tradicionales de apertura.' },
-            { id: 'd1e2', hora: '19:30 - 20:30', artista: 'Vislumbre del Esteko', escenario: 'Alternativo Luna', descripcion: 'Energía joven y renovación del folklore.' },
-            { id: 'd1e3', hora: '20:45 - 21:45', artista: 'Los Arcanos del Desierto', escenario: 'Principal Sol', descripcion: 'Innovación y tradición santiagueña.' },
-            { id: 'd1e4', hora: '22:00 - 23:15', artista: 'Raly Barrionuevo', escenario: 'Principal Sol', descripcion: 'Un viaje por sus grandes éxitos.' },
-            { id: 'd1e5', hora: '23:30 - 00:45', artista: 'Peteco Carabajal', escenario: 'Principal Sol', descripcion: 'La leyenda del violín y el bombo.' },
+            { id: 'd1e1', hora: '18:00-19:00', artista: 'Apertura Ballet Local', escenario: 'Principal Sol', descripcion: 'Danzas tradicionales.' },
+            { id: 'd1e2', hora: '19:30-20:30', artista: 'Vislumbre del Esteko', escenario: 'Alternativo Luna', descripcion: 'Energía joven.' },
+            { id: 'd1e3', hora: '20:45-21:45', artista: 'Los Arcanos del Desierto', escenario: 'Principal Sol', descripcion: 'Innovación y tradición.' },
+            { id: 'd1e4', hora: '22:00-23:15', artista: 'Raly Barrionuevo', escenario: 'Principal Sol', descripcion: 'Grandes éxitos.' },
+            { id: 'd1e5', hora: '23:30-00:45', artista: 'Peteco Carabajal', escenario: 'Principal Sol', descripcion: 'Leyenda del violín.' },
           ]
         },
         {
-          fechaISO: '2024-08-16', // Viernes
-          nombreDia: 'Día 2: Corazón de Chacarera',
+          fechaISO: '2024-08-16', nombreDia: 'Día 2: Corazón de Chacarera',
           eventos: [
-            { id: 'd2e1', hora: '19:00 - 20:00', artista: 'Don Argañaraz', escenario: 'Patio Santiagueño', descripcion: 'La voz auténtica de Santiago.' },
-            { id: 'd2e2', hora: '20:15 - 21:15', artista: 'Artistas Emergentes SDE', escenario: 'Alternativo Luna' },
-            { id: 'd2e3', hora: '21:30 - 22:45', artista: 'Dúo Coplanacu', escenario: 'Principal Sol', descripcion: 'La copla hecha canción.' },
-            { id: 'd2e4', hora: '23:00 - 00:15', artista: 'Horacio Banegas', escenario: 'Principal Sol' },
-            { id: 'd2e5', hora: '00:30 - Cierre', artista: 'Gran guitarreada popular', escenario: 'Patio Santiagueño', descripcion: 'Música y encuentro bajo las estrellas.' },
+            { id: 'd2e1', hora: '19:00-20:00', artista: 'Don Argañaraz', escenario: 'Patio Santiagueño', descripcion: 'Voz auténtica.' },
+            { id: 'd2e2', hora: '20:15-21:15', artista: 'Artistas Emergentes SDE', escenario: 'Alternativo Luna' },
+            { id: 'd2e3', hora: '21:30-22:45', artista: 'Dúo Coplanacu', escenario: 'Principal Sol', descripcion: 'La copla hecha canción.' },
+            { id: 'd2e4', hora: '23:00-00:15', artista: 'Horacio Banegas', escenario: 'Principal Sol' },
+            { id: 'd2e5', hora: '00:30-Cierre', artista: 'Gran guitarreada popular', escenario: 'Patio Santiagueño', descripcion: 'Música y encuentro.' },
           ]
         },
         {
-          fechaISO: '2024-08-17', // Sábado
-          nombreDia: 'Día 3: Noche de Leyendas',
+          fechaISO: '2024-08-17', nombreDia: 'Día 3: Noche de Leyendas',
           eventos: [
-            { id: 'd3e1', hora: '19:30 - 20:30', artista: 'La Brasita de mi Chala', escenario: 'Alternativo Luna', descripcion: 'Chacarera festiva y bailable.' },
-            { id: 'd3e2', hora: '20:45 - 21:45', artista: 'Jóvenes Talentos del Malambo', escenario: 'Principal Sol', descripcion: 'Demostración de destreza y pasión.' },
-            { id: 'd3e3', hora: '22:00 - 23:45', artista: 'Los Manseros Santiagueños', escenario: 'Principal Sol', descripcion: 'Un cierre inolvidable con los embajadores del folklore.' },
+            { id: 'd3e1', hora: '19:30-20:30', artista: 'La Brasita de mi Chala', escenario: 'Alternativo Luna', descripcion: 'Chacarera festiva.' },
+            { id: 'd3e2', hora: '20:45-21:45', artista: 'Jóvenes Talentos del Malambo', escenario: 'Principal Sol', descripcion: 'Destreza y pasión.' },
+            { id: 'd3e3', hora: '22:00-23:45', artista: 'Los Manseros Santiagueños', escenario: 'Principal Sol', descripcion: 'Cierre inolvidable.' },
           ]
         }
       ]
@@ -95,72 +91,34 @@ export default {
 </script>
 
 <style scoped>
-.cronograma-page-content {
-  padding-top: 2rem;
-  padding-bottom: 3rem;
+.cronograma-page-content { padding-top: 2rem; padding-bottom: 3rem; }
+#horarios-festival h1 { text-align: center; margin-bottom: 1rem; color: var(--color-primary-red); font-size: 2.5rem; }
+#horarios-festival > .container > p { text-align: center; color: var(--color-text-medium); margin-bottom: 2.5rem; font-size: 1.1rem; }
+.dia-cronograma { margin-bottom: 3rem; background-color: var(--color-background-surface-dark); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--color-border-dark); }
+.dia-cronograma h2 { color: var(--color-accent-light-blue); margin-bottom: 1.5rem; border-bottom: 2px solid var(--color-primary-red); padding-bottom: 0.5rem; font-size: 1.8rem; }
+.table-responsive-wrapper { overflow-x: auto; }
+.tabla-cronograma { width: 100%; margin-top: 1rem; }
+.tabla-cronograma th, .tabla-cronograma td { padding: 0.8em 1em; }
+.no-eventos td { text-align: center; font-style: italic; color: var(--color-text-medium); padding: 2rem 1rem !important; }
+.loading-placeholder { text-align: center; padding: 3rem; color: var(--color-text-medium); }
+
+@media (max-width: 768px) { /* Tablet y Móvil General */
+  #horarios-festival h1 { font-size: 2rem; }
+  .dia-cronograma h2 { font-size: 1.5rem; }
+  /* Los estilos de tabla responsiva de estilos.css global se aplicarán */
 }
 
-#horarios-festival h1 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: var(--color-primary-red);
-  font-size: 2.5rem;
-}
-#horarios-festival > .container > p {
-  text-align: center;
-  color: var(--color-text-medium);
-  margin-bottom: 2.5rem;
-  font-size: 1.1rem;
-}
-
-.dia-cronograma {
-  margin-bottom: 3rem;
-  background-color: var(--color-background-surface-dark);
-  padding: 1.5rem;
-  border-radius: 8px;
-  border: 1px solid var(--color-border-dark);
-}
-
-.dia-cronograma h2 {
-  color: var(--color-accent-light-blue);
-  margin-bottom: 1.5rem;
-  border-bottom: 2px solid var(--color-primary-red);
-  padding-bottom: 0.5rem;
-  font-size: 1.8rem;
-}
-
-.table-responsive-wrapper {
-  overflow-x: auto;
-}
-
-.tabla-cronograma {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.tabla-cronograma th, .tabla-cronograma td {
-  padding: 0.8em 1em;
-}
-
-.no-eventos td {
-    text-align: center;
-    font-style: italic;
-    color: var(--color-text-medium);
-    padding: 2rem 1rem !important;
-}
-
-.loading-placeholder {
-  text-align: center;
-  padding: 3rem;
-  color: var(--color-text-medium);
-}
-
-@media (max-width: 768px) {
-  #horarios-festival h1 {
-    font-size: 2rem;
-  }
-  .dia-cronograma h2 {
-    font-size: 1.5rem;
-  }
+@media (max-width: 360px) { /* Específico para Mobile S - 320px */
+    #horarios-festival h1 { font-size: 1.8rem; margin-bottom: 1rem; }
+    #horarios-festival > .container > p { font-size: 1rem; margin-bottom: 1.5rem; }
+    .dia-cronograma { padding: 1rem; margin-bottom: 2rem;}
+    .dia-cronograma h2 { font-size: 1.3rem; margin-bottom: 1rem; }
+    .tabla-cronograma th, .tabla-cronograma td { padding: 0.6em 0.5em; /* Menos padding en celdas */ }
+    .tabla-cronograma td { font-size: 0.8rem; /* Texto más pequeño en celdas responsivas */ }
+    .tabla-cronograma td::before { /* Ajustar el label de la tabla responsiva si es necesario */
+        font-size: 0.75rem; /* Label más pequeño */
+        /* width: 30%; */ /* Podrías necesitar ajustar el ancho */
+        /* top: 0.5em; */
+    }
 }
 </style>

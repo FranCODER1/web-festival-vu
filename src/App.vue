@@ -39,7 +39,7 @@
         <li><router-link to="/cronograma" @click="closeMobileMenu">Cronograma</router-link></li>
         <li><router-link to="/ubicacion" @click="closeMobileMenu">Ubicación</router-link></li>
         <li><router-link to="/contacto" @click="closeMobileMenu">Contacto</router-link></li>
-        <li>
+        <li> 
           <router-link to="/entradas" class="nav-button-cta-mobile" @click="closeMobileMenu">
             <i class="fas fa-ticket-alt"></i> Entradas
           </router-link>
@@ -48,7 +48,11 @@
     </div>
 
     <main @click="closeMobileMenuIfOpen">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" :key="$route.path" />
+        </transition>
+      </router-view>
     </main>
 
     <footer>
@@ -109,8 +113,8 @@ export default {
 }
 #app-layout > main {
   flex-grow: 1;
-  position: relative;
-  z-index: 1;
+  position: relative; 
+  z-index: 1;       
 }
 
 /* --- NAVBAR ESTILOS BASE --- */
@@ -123,7 +127,7 @@ nav#main-nav {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 1011;
+  z-index: 1011; 
   box-shadow: 0 2px 10px rgba(var(--rgb-black), 0.2);
 }
 
@@ -134,49 +138,38 @@ nav#main-nav .nav-container {
   max-width: 1300px;
   margin: 0 auto;
   padding: 0 15px;
-  /* position: relative; No es necesario si el logo ya no es absoluto en desktop */
-  height: 60px; /* Aumentamos un poco la altura para el logo más grande */
+  height: 60px; 
 }
 
-/* Logo */
-#logo-nav-link-main { /* Nueva ID para el enlace del logo */
-  display: flex; /* Para centrar la imagen si tiene padding */
+#logo-nav-link-main {
+  display: flex; 
   align-items: center;
-  margin-right: auto; /* Empuja los links de escritorio y el CTA a la derecha */
+  margin-right: auto; 
   z-index: 1;
 }
-#logo-nav-img { /* Nueva ID para la imagen del logo */
-  width: 70px; /* LOGO MÁS GRANDE EN ESCRITORIO */
+#logo-nav-img {
+  width: 70px; 
   height: auto;
   display: block;
   transition: transform 0.3s ease;
 }
 #logo-nav-img:hover { transform: scale(1.1); }
 
-
 /* --- NAV DE ESCRITORIO --- */
 ul.desktop-nav-links {
   list-style: none;
   padding: 0;
-  margin: 0; /* El logo y el CTA lo empujarán */
-  display: flex;
+  margin: 0; 
+  display: flex; 
   align-items: center;
   height: 100%;
-  /* Quitar flex-grow para que no compita con el margin-right:auto del logo y margin-left:auto del CTA */
 }
-ul.desktop-nav-links li {
-  margin: 0 0.75rem; /* Un poco más de margen */
-}
+ul.desktop-nav-links li { margin: 0 0.75rem; }
 ul.desktop-nav-links li a {
-  color: var(--color-text-light);
-  padding: 0.6em 1em;
-  display: block;
-  text-transform: uppercase;
-  font-weight: 500;
-  font-size: 0.85rem; /* Puedes mantener o ajustar */
-  border-radius: 5px;
-  position: relative;
-  transition: color 0.3s ease, transform 0.2s ease; /* Quitado background-color */
+  color: var(--color-text-light); padding: 0.6em 1em; display: block;
+  text-transform: uppercase; font-weight: 500; font-size: 0.85rem;
+  border-radius: 5px; position: relative;
+  transition: color 0.3s ease, transform 0.2s ease;
 }
 ul.desktop-nav-links li a::before {
   content: ''; position: absolute; bottom: 3px; left: 50%;
@@ -187,9 +180,7 @@ ul.desktop-nav-links li a:hover,
 ul.desktop-nav-links li a:focus,
 ul.desktop-nav-links li a.router-link-active,
 ul.desktop-nav-links li a.router-link-exact-active {
-  background-color: transparent; /* Ya estaba */
-  color: var(--color-primary-red);
-  transform: translateY(-1px);
+  color: var(--color-primary-red); transform: translateY(-1px);
 }
 ul.desktop-nav-links li a:hover::before,
 ul.desktop-nav-links li a:focus::before,
@@ -197,38 +188,24 @@ ul.desktop-nav-links li a.router-link-active::before,
 ul.desktop-nav-links li a.router-link-exact-active::before {
   width: 60%;
 }
-
-/* Botón CTA "Entradas" para ESCRITORIO */
 .desktop-cta-button {
-  background-color: var(--color-primary-red);
-  color: var(--color-text-light) !important;
-  padding: 0.7em 1.4em; /* Padding ajustado */
-  border-radius: 25px;
-  text-transform: uppercase;
-  font-weight: bold;
-  font-size: 0.85rem;
-  margin-left: 1.5rem; /* Espacio a la izquierda del botón CTA */
+  background-color: var(--color-primary-red); color: var(--color-text-light) !important;
+  padding: 0.7em 1.4em; border-radius: 25px; text-transform: uppercase;
+  font-weight: bold; font-size: 0.85rem; margin-left: 1.5rem;
   transition: background-color 0.3s ease, transform 0.2s ease;
-  display: flex; /* Para alinear el icono y el texto */
-  align-items: center;
+  display: flex; align-items: center;
 }
 .desktop-cta-button:hover {
-  background-color: var(--color-hover-red) !important;
-  transform: translateY(-2px);
+  background-color: var(--color-hover-red) !important; transform: translateY(-2px);
 }
-.desktop-cta-button i.fas {
-  margin-right: 0.6em;
-}
-
+.desktop-cta-button i.fas { margin-right: 0.6em; }
 
 /* --- ESTILOS HAMBURGUESA --- */
 .hamburger-menu {
-  display: none; /* OCULTO por defecto en escritorio */
-  /* ... (resto de estilos de hamburguesa sin cambios) ... */
+  display: none; 
   flex-direction: column; justify-content: space-around; align-items: center;
   width: 40px; height: 40px; background: transparent; border: 2px solid var(--color-text-light);
-  border-radius: 4px; cursor: pointer; padding: 6px; z-index: 1012; /* Alto para estar encima de todo en el nav */
-  position: relative;
+  border-radius: 4px; cursor: pointer; padding: 6px; z-index: 1012; position: relative;
 }
 .hamburger-menu .bar { display: block; width: 20px; height: 2px; background-color: var(--color-text-light); transition: all 0.3s ease-in-out; border-radius: 1px; }
 .hamburger-menu.is-active .bar:nth-child(1) { transform: translateY(6px) rotate(45deg); }
@@ -237,33 +214,30 @@ ul.desktop-nav-links li a.router-link-exact-active::before {
 .hamburger-menu.is-active { border-color: var(--color-primary-red); }
 .hamburger-menu.is-active .bar { background-color: var(--color-primary-red); }
 
-
 /* --- ESTILOS DEL MENÚ MÓVIL DESPLEGABLE (OVERLAY) --- */
 .mobile-menu-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
   background-color: rgba(var(--rgb-background-body-dark), 0.85);
   -webkit-backdrop-filter: blur(12px) saturate(110%);
   backdrop-filter: blur(12px) saturate(110%);
-  z-index: 1010;
+  z-index: 1010; 
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding-top: calc(60px + 1rem); /* altura nav (ajustada a 60px) + padding nav vertical total (0.5rem*2) */
+  padding-top: calc(60px + 1rem); /* altura nav + padding nav vertical total */
   opacity: 0; visibility: hidden; transform: translateY(-20px);
   transition: opacity 0.35s ease, visibility 0s linear 0.35s, transform 0.35s ease;
 }
-.mobile-menu-overlay.is-open { /* ... (sin cambios) ... */
+.mobile-menu-overlay.is-open {
   opacity: 1; visibility: visible; transform: translateY(0);
   transition: opacity 0.35s ease, visibility 0s linear 0s, transform 0.35s ease;
 }
-ul.mobile-nav-links { /* ... (sin cambios) ... */
-  list-style: none; padding: 0; margin: 0; text-align: center;
-}
-ul.mobile-nav-links li a { /* ... (sin cambios) ... */
+ul.mobile-nav-links { list-style: none; padding: 0; margin: 0; text-align: center; }
+ul.mobile-nav-links li a {
   display: block; padding: 0.9rem 0; color: var(--color-text-light); text-decoration: none;
   font-family: 'Montserrat', sans-serif; font-size: 1.6rem; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.5px;
   transition: color 0.3s ease, transform 0.2s ease; position: relative;
 }
-ul.mobile-nav-links li a::after { /* ... (sin cambios) ... */
+ul.mobile-nav-links li a::after {
   content: '›'; position: absolute; top: 50%; transform: translateY(-50%); right: -15px;
   opacity: 0; transition: opacity 0.3s ease, right 0.3s ease;
   color: var(--color-primary-red); font-size: 1.5em; line-height: 1;
@@ -271,107 +245,106 @@ ul.mobile-nav-links li a::after { /* ... (sin cambios) ... */
 ul.mobile-nav-links li a:hover,
 ul.mobile-nav-links li a:focus,
 ul.mobile-nav-links li a.router-link-active,
-ul.mobile-nav-links li a.router-link-exact-active { /* ... (sin cambios) ... */
+ul.mobile-nav-links li a.router-link-exact-active {
   color: var(--color-primary-red);
 }
 ul.mobile-nav-links li a:hover::after,
 ul.mobile-nav-links li a:focus::after,
 ul.mobile-nav-links li a.router-link-active::after,
-ul.mobile-nav-links li a.router-link-exact-active::after { /* ... (sin cambios) ... */
-  opacity: 1; right: -25px;
+ul.mobile-nav-links li a.router-link-exact-active::after {
+  opacity: 1; right: -25px; 
 }
-.nav-button-cta-mobile { /* ... (sin cambios) ... */
+.nav-button-cta-mobile { 
   margin-top: 1rem; padding: 0.7em 1.5em !important; border: 1px solid var(--color-primary-red);
   border-radius: 25px; display: inline-block; width: auto;
 }
 .nav-button-cta-mobile i.fas { margin-right: 0.5em; }
 .nav-button-cta-mobile:hover,
 .nav-button-cta-mobile.router-link-active,
-.nav-button-cta-mobile.router-link-exact-active { /* ... (sin cambios) ... */
+.nav-button-cta-mobile.router-link-exact-active {
     background-color: var(--color-primary-red);
     color: var(--color-text-light) !important;
     border-color: var(--color-primary-red);
 }
 .nav-button-cta-mobile:hover::after,
 .nav-button-cta-mobile.router-link-active::after,
-.nav-button-cta-mobile.router-link-exact-active::after { /* ... (sin cambios) ... */
-    opacity: 0;
+.nav-button-cta-mobile.router-link-exact-active::after {
+    opacity: 0; 
 }
 
+/* --- MEDIA QUERIES PARA NAVBAR Y MENÚ MÓVIL --- */
+@media (min-width: 901px) { /* ESTILOS PARA ESCRITORIO */
+    .hamburger-menu { display: none !important; }
+    ul.desktop-nav-links { display: flex !important; }
+    .desktop-cta-button { display: flex !important; }
+    #logo-nav-link-main { position: static; transform: none; margin-right: auto; }
+    nav#main-nav .nav-container { justify-content: flex-start; }
+}
 
-/* --- MEDIA QUERY PARA CAMBIAR ENTRE NAV DE ESCRITORIO Y HAMBURGUESA --- */
-@media (min-width: 901px) { /* ESTILOS PARA ESCRITORIO (más ancho que 900px) */
-    .hamburger-menu {
-        display: none !important; /* Ocultar hamburguesa */
-    }
-    /* .nav-left-spacer { display: block; } No es necesario si el logo usa margin-right: auto */
-    ul.desktop-nav-links {
-        display: flex !important; /* Mostrar links de escritorio */
-    }
-    .desktop-cta-button {
-        display: flex !important; /* Mostrar botón CTA de escritorio */
-    }
-    #logo-nav-link-main { /* Asegurar que el logo esté bien posicionado en escritorio */
-        position: static; /* Quitar posicionamiento absoluto del logo en escritorio */
-        transform: none;
-        margin-right: auto; /* Empuja todo lo demás a la derecha */
-    }
+@media (max-width: 900px) { /* ESTILOS PARA MÓVIL/TABLET */
+  ul.desktop-nav-links { display: none !important; }
+  .desktop-cta-button { display: none !important; }
+  .hamburger-menu { display: flex !important; margin-left: auto; }
+  #logo-nav-link-main { position: static; transform: none; margin-right: auto; }
+  #logo-nav-img { width: 40px; height: 40px; object-fit: contain; }
+  nav#main-nav .nav-container { justify-content: space-between; }
+}
+
+/* NUEVA MEDIA QUERY PARA PANTALLAS MUY ESTRECHAS (ej. 320px-360px) */
+@media (max-width: 360px) {
     nav#main-nav .nav-container {
-        justify-content: flex-start; /* Alinea todo a la izquierda, el margin:auto del logo lo empuja */
+        height: 45px; /* Reducir altura del navbar */
+        padding: 0 10px; /* Menos padding horizontal */
+    }
+    #logo-nav-img { /* Logo aún más pequeño */
+        width: 30px;
+        height: 30px;
+    }
+    .hamburger-menu { /* Botón hamburguesa más pequeño */
+        width: 35px;
+        height: 35px;
+        padding: 5px;
+    }
+    .hamburger-menu .bar {
+        width: 18px; /* Barras más cortas */
+    }
+    .mobile-menu-overlay { /* Ajustar padding-top si la altura del navbar cambió */
+          padding-top: calc(45px + 1rem); 
+    }
+    ul.mobile-nav-links li a {
+        font-size: 1.3rem; /* Links del menú un poco más pequeños */
+        padding: 0.8rem 0;
+    }
+    ul.mobile-nav-links li a::after { /* Flecha más pequeña y más cerca */
+        font-size: 1.3em;
+        right: -10px;
+    }
+    ul.mobile-nav-links li a:hover::after,
+    ul.mobile-nav-links li a:focus::after,
+    ul.mobile-nav-links li a.router-link-active::after,
+    ul.mobile-nav-links li a.router-link-exact-active::after {
+        right: -20px; 
+    }
+    .nav-button-cta-mobile {
+        font-size: 1.2rem; /* Botón CTA un poco más pequeño */
+        padding: 0.6em 1.2em !important;
     }
 }
 
-@media (max-width: 900px) { /* ESTILOS PARA MÓVIL/TABLET (hasta 900px) */
-  ul.desktop-nav-links {
-    display: none !important; /* Ocultar nav de escritorio */
-  }
-  .desktop-cta-button {
-    display: none !important; /* Ocultar CTA de escritorio */
-  }
-  /* .nav-left-spacer { display: none !important; } No lo usamos ahora */
-
-  .hamburger-menu {
-    display: flex !important; /* Mostrar hamburguesa */
-    margin-left: auto; /* Empuja la hamburguesa a la derecha */
-  }
-  #logo-nav-link-main { /* Logo en móvil */
-    position: static; /* Quitar posicionamiento absoluto */
-    transform: none;
-    margin-right: auto; /* Empuja la hamburguesa a la derecha */
-  }
-  #logo-nav-img {
-      width: 40px;
-      height: 40px; 
-      object-fit: contain; 
-  }
-  nav#main-nav .nav-container {
-    justify-content: space-between;
-  }
-}
 
 /* Footer Icons */
 footer .fab, footer .fas {
   margin-right: 0.3em;
   font-size: 1.1em;
 }
-footer {
-    background-color: var(--color-background-surface-dark);
-    color: var(--color-text-medium); 
-    text-align: center;
-    padding: 3rem 0;
-    border-top: 3px solid var(--color-primary-red);
-}
-footer p {
-    margin-bottom: 0.5rem;
-    font-size: 0.9rem;
-}
 
-footer a { /* Estilo para los enlaces dentro del footer */
-    color: var(--color-accent-light-blue); 
-    transition: color 0.3s ease;
+/* --- Transición de Ruta: Fade --- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
-
-footer a:hover {
-    color: var(--color-primary-red);
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

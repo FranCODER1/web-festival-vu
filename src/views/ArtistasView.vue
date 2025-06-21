@@ -43,96 +43,25 @@
 </template>
 
 <script>
-
 export default {
   name: 'ArtistasView',
-
   data() {
     return {
       artistas: [
-        {
-          id: 1,
-          name: 'Los Manseros Santiagueños',
-          description: 'Una verdadera institución del folclore argentino. Con décadas de trayectoria, son embajadores de la chacarera, la zamba y el gato santiagueño. Sus armonías vocales son inconfundibles.',
-          imageSrc: 'img/manseros.jpg',
-          imageAlt: 'Foto de Los Manseros Santiagueños',
-          youtubeLink: 'https://www.youtube.com/watch?v=nyzz7aFdGwI' 
-        },
-        {
-          id: 2,
-          name: 'Peteco Carabajal',
-          description: 'Referente indiscutido, multiinstrumentista (violín, guitarra, bombo), compositor prolífico y cantante. Miembro de la legendaria familia Carabajal, ha sabido innovar sin perder la raíz. Su energía en el escenario es contagiosa.',
-          imageSrc: 'img/peteco.jpg',
-          imageAlt: 'Foto de Peteco Carabajal',
-          youtubeLink: 'https://www.youtube.com/watch?v=_OhwHix6Vgc' 
-        },
-        {
-          id: 3,
-          name: 'Horacio Banegas',
-          description: 'Compositor, cantante y guitarrista de enorme talento y profundidad. Su obra es extensa y muy respetada, con un fuerte anclaje en la poesía y la música de Santiago. Voz potente y gran presencia escénica.',
-          imageSrc: 'img/horacio_banegas+.jpg', 
-          imageAlt: 'Foto de Horacio Banegas',
-          youtubeLink: 'https://www.youtube.com/watch?v=TTGJfSDTDXo' 
-        },
-        {
-          id: 4,
-          name: 'Raly Barrionuevo',
-          description: 'Uno de los artistas más populares de la nueva generación del folclore. Con un estilo propio que fusiona lo tradicional con sonidos más contemporáneos y letras comprometidas. Gran convocatoria entre el público joven.',
-          imageSrc: 'img/Raly.jpg', 
-          imageAlt: 'Foto de Raly Barrionuevo',
-          youtubeLink: 'https://www.youtube.com/watch?v=2cEWcfMXfdI' 
-        },
-        {
-          id: 5,
-          name: 'Dúo Coplanacu',
-          description: 'Un dúo emblemático que ha llevado la música santiagueña por todo el país y más allá. Su fuerza interpretativa y la autenticidad de su propuesta los hacen muy queridos. "La Copla" es su sello.',
-          imageSrc: 'img/duo-coplanacu.jpg',
-          imageAlt: 'Foto del Dúo Coplanacu',
-          youtubeLink: 'https://www.youtube.com/watch?v=FwGzy7_20u0' 
-        },
-        {
-          id: 6,
-          name: 'Los Arcanos del Desierto',
-          description: 'Innovadora propuesta que fusiona el folclore con sonidos contemporáneos y electrónicos, manteniendo la esencia de la música de Santiago del Estero.',
-          imageSrc: 'img/arcanos.jpeg', 
-          imageAlt: 'Foto de Los Arcanos del Desierto',
-          youtubeLink: 'https://www.youtube.com/watch?v=5YvtEw2P8_c'
-        },
-        {
-          id: 7,
-          name: 'La Brasita de mi Chala',
-          description: 'Grupo santiagueño de gran trayectoria, referente de la chacarera festiva y bailable.', 
-          imageSrc: 'img/La Brasita.png', 
-          imageAlt: 'Foto de La Brasita de mi Chala',
-          youtubeLink: 'https://www.youtube.com/watch?v=u7y8kLL1BA0' 
-        },
-        {
-          id: 8,
-          name: 'Don Argañaraz',
-          description: 'Cantautor y vidalero, una voz auténtica que representa las profundas raíces de Santiago del Estero.', 
-          imageSrc: 'img/Don argañaraz.png',
-          imageAlt: 'Foto de Don Argañaraz',
-          youtubeLink: 'https://www.youtube.com/watch?v=Iy2CPPjpcqc' 
-        },
-        {
-          id: 9,
-          name: 'Vislumbre del Esteko',
-          description: 'Energía joven y renovación del folklore, con un sonido que invita al baile y la celebración.', 
-          imageSrc: 'img/Vislumbre.png', 
-          imageAlt: 'Foto de Vislumbre del Esteko',
-          youtubeLink: 'https://www.youtube.com/watch?v=EE_3aKeEg14' 
-        }
+        { id: 1, name: 'Los Manseros Santiagueños', description: 'Una verdadera institución...', imageSrc: 'img/manseros.jpg', imageAlt: 'Foto de Los Manseros Santiagueños', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_MANSEROS' },
+        { id: 2, name: 'Peteco Carabajal', description: 'Referente indiscutido...', imageSrc: 'img/peteco.jpg', imageAlt: 'Foto de Peteco Carabajal', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_PETECO' },
+        { id: 3, name: 'Horacio Banegas', description: 'Compositor, cantante y guitarrista...', imageSrc: 'img/horacio_banegas+.jpg', imageAlt: 'Foto de Horacio Banegas', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_BANEGAS' },
+        { id: 4, name: 'Raly Barrionuevo', description: 'Uno de los artistas más populares...', imageSrc: 'img/Raly.jpg', imageAlt: 'Foto de Raly Barrionuevo', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_RALY' },
+        { id: 5, name: 'Dúo Coplanacu', description: 'Un dúo emblemático que ha llevado...', imageSrc: 'img/duo-coplanacu.jpg', imageAlt: 'Foto del Dúo Coplanacu', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_COPLANACU' },
+        { id: 6, name: 'Los Arcanos del Desierto', description: 'Innovadora propuesta que fusiona...', imageSrc: 'img/arcanos.jpeg', imageAlt: 'Foto de Los Arcanos del Desierto', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_ARCANOS' },
+        { id: 7, name: 'La Brasita de mi Chala', description: 'Grupo santiagueño de gran trayectoria...', imageSrc: 'img/La Brasita.png', imageAlt: 'Foto de La Brasita de mi Chala', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_BRASITA' },
+        { id: 8, name: 'Don Argañaraz', description: 'Cantautor y vidalero, una voz auténtica...', imageSrc: 'img/Don argañaraz.png', imageAlt: 'Foto de Don Argañaraz', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_DONARGANARAZ' },
+        { id: 9, name: 'Vislumbre del Esteko', description: 'Energía joven y renovación del folklore...', imageSrc: 'img/Vislumbre.png', imageAlt: 'Foto de Vislumbre del Esteko', youtubeLink: 'https://www.youtube.com/watch?v=VIDEO_ID_VISLUMBRE' }
       ],
-      generosMusicales: [
-        'Chacarera',
-        'Zamba',
-        'Gato',
-        'Escondido',
-        'Chamamé'
-      ]
+      generosMusicales: [ 'Chacarera', 'Zamba', 'Gato', 'Escondido', 'Chamamé' ]
     };
   },
-  methods: {
+  methods: { 
     getImageUrl(imagePath) {
       if (!imagePath) return '';
       try {
@@ -152,26 +81,19 @@ export default {
   padding-top: 2rem;
   padding-bottom: 2rem;
 }
-
 #lineup h1 {
   text-align: center;
   margin-bottom: 2.5rem;
   color: var(--color-primary-red);
   font-size: 2.5rem;
 }
-
 .artist-list-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2.5rem;
   margin-bottom: 3rem;
 }
-
-.loading-placeholder {
-  text-align: center;
-  padding: 3rem;
-  color: var(--color-text-medium);
-}
+.loading-placeholder { /* ... */ }
 
 .artist-card-inline {
   background-color: var(--color-background-surface-dark);
@@ -179,11 +101,10 @@ export default {
   border-radius: 12px;
   border: 1px solid var(--color-border-dark);
   box-shadow: 0 5px 15px rgba(0,0,0, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Ajustado para empujar el botón hacia abajo */
+  justify-content: space-between;
   align-items: center;
   height: 100%;
 }
@@ -200,8 +121,7 @@ export default {
   border: 3px solid var(--color-accent-light-blue);
 }
 .artist-info-content-inline {
-  /* flex-grow: 1; Ya no es necesario si justify-content es space-between en la card */
-  margin-bottom: 1rem; /* Espacio entre descripción y botón de YouTube */
+  margin-bottom: 1rem;
 }
 .artist-card-inline h3 {
   color: var(--color-accent-light-blue);
@@ -212,39 +132,56 @@ export default {
 .artist-card-inline p {
   font-size: 0.9rem;
   color: var(--color-text-medium);
-  /* margin-bottom: 1rem; Ajustado por el margin-bottom de artist-info-content-inline */
   line-height: 1.5;
 }
-
 .artist-youtube-link {
-  margin-top: auto; /* Empuja el botón de YouTube hacia abajo si hay espacio */
+  margin-top: auto; 
   padding-top: 0.5rem; 
 }
-
-.btn-youtube { /* Estilo para el botón de YouTube */
-  /* Hereda estilos de .btn de tu estilos.css global */
-  /* Puedes añadir o sobrescribir estilos aquí si es necesario */
-  background-color: #FF0000; /* Color de YouTube */
-  color: white !important; /* Asegurar texto blanco */
-  border-color: #FF0000; /* Opcional: si .btn tiene borde */
-  display: inline-flex; /* Para alinear icono y texto */
+.btn-youtube {
+  background-color: #FF0000; 
+  color: white !important; 
+  border-color: #FF0000; 
+  display: inline-flex; 
   align-items: center;
   justify-content: center;
-  padding: 0.6em 1.2em; /* Ajusta padding */
+  padding: 0.6em 1.2em; 
 }
 .btn-youtube:hover {
-  background-color: #cc0000 !important; /* YouTube más oscuro en hover */
+  background-color: #cc0000 !important; 
   border-color: #cc0000 !important;
 }
-.btn-youtube .fab.fa-youtube { /* O .fas fa-play si prefieres un icono de play */
-  margin-right: 0.5em;
+.btn-youtube .fab.fa-youtube { margin-right: 0.5em; }
+
+#generos { /* ... */ }
+#generos h2 { /* ... */ }
+#generos ul { /* ... */ }
+#generos ul li { /* ... */ }
+
+/* Ajustes para Mobile S (320px) y pantallas muy pequeñas */
+@media (max-width: 360px) {
+    #lineup h1 { font-size: 1.8rem; margin-bottom: 1.5rem;}
+    .artist-list-grid { gap: 1.5rem; } /* Menos espacio entre tarjetas */
+    .artist-card-inline { padding: 1rem; }
+    .artist-thumbnail-inline { width: 100px; height: 100px; margin-bottom: 0.75rem; }
+    .artist-card-inline h3 { font-size: 1.2rem; }
+    .artist-card-inline p { font-size: 0.8rem; line-height: 1.4; }
+    .btn-youtube { padding: 0.5em 1em; font-size: 0.8rem; }
+    .btn-youtube .fab.fa-youtube { font-size: 0.9em; }
+    #generos h2 { font-size: 1.5rem; }
+    #generos ul li { font-size: 0.8rem; padding: 0.3em 0.6em;}
 }
 
-
-#generos { /* ... (sin cambios) ... */ }
-#generos h2 { /* ... (sin cambios) ... */ }
-#generos ul { /* ... (sin cambios) ... */ }
-#generos ul li { /* ... (sin cambios) ... */ }
-
-@media (max-width: 600px) { /* ... (sin cambios) ... */ }
+@media (max-width: 600px) {
+  #lineup h1 {
+    /* font-size: 2rem; // Redefinido en max-width: 360px si es necesario */
+  }
+  .artist-list-grid { /* Si quieres una sola columna en móvil más grande que 360px */
+     /* grid-template-columns: 1fr; */
+     /* gap: 1.5rem; */
+  }
+  #generos ul {
+    justify-content: flex-start;
+  }
+}
 </style>

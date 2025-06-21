@@ -20,11 +20,8 @@
 
         <section id="formulario-contacto" class="formulario-wrapper">
           <h2>Formulario de Contacto</h2>
-          {/* El action y method aquí son más para la semántica y fallback, Netlify se basa en el _form.html para la detección inicial y el JS para el envío */}
           <form @submit.prevent="enviarFormulario" name="contacto-festival" data-netlify="true" data-netlify-honeypot="bot-field" action="/contacto/gracias/">
-            {/* Input oculto para el nombre del formulario que Netlify necesita */}
             <input type="hidden" name="form-name" value="contacto-festival" />
-            {/* Campo Honeypot */}
             <p class="hidden-field" style="display:none;">
               <label>No llenar este campo si eres humano: <input name="bot-field" v-model="formData['bot-field']" /></label>
             </p>
@@ -83,8 +80,7 @@
             <div v-if="mensajeErrorGeneral" class="mensaje-error">
               {{ mensajeErrorGeneral }}
             </div>
-            {/* El mensaje de confirmación ya no es necesario aquí si rediriges a una página de gracias */}
-            {/* <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p> */}
+            <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p> 
 
             <div class="form-actions">
               <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
