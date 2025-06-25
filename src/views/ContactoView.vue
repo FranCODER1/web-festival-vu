@@ -20,8 +20,6 @@
 
         <section id="formulario-contacto" class="formulario-wrapper">
           <h2>Formulario de Contacto</h2>
-          {/* No es estrictamente necesario data-netlify aquí si usas _form.html, pero no hace daño */}
-          {/* El action aquí no se usará debido al @submit.prevent, pero puede ser una referencia */}
           <form 
             @submit.prevent="enviarFormulario" 
             name="contacto-festival" 
@@ -29,10 +27,7 @@
             data-netlify="true" 
             data-netlify-honeypot="bot-field"
           >
-            {/* Este input es crucial para que Netlify sepa qué formulario se está enviando vía JS */}
             <input type="hidden" name="form-name" value="contacto-festival" />
-            
-            {/* Campo Honeypot */}
             <p class="hidden-field">
               <label>No llenar este campo: <input name="bot-field" v-model="formData['bot-field']" /></label>
             </p>
@@ -91,7 +86,6 @@
             <div v-if="mensajeErrorGeneral" class="mensaje-error">
               {{ mensajeErrorGeneral }}
             </div>
-            {/* El mensaje de "Gracias" se manejará con la redirección a la página de gracias */}
             {/* <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p> */}
 
             <div class="form-actions">
@@ -224,8 +218,7 @@ export default {
 </script>
 
 <style scoped>
-/* ... (tus estilos scoped sin cambios, pero asegúrate que .hidden-field esté bien oculto) ... */
-.hidden-field { /* Estilo para ocultar el campo honeypot visualmente pero accesible para bots */
+.hidden-field {
   opacity: 0;
   position: absolute;
   top: 0;
