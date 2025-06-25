@@ -20,10 +20,21 @@
 
         <section id="formulario-contacto" class="formulario-wrapper">
           <h2>Formulario de Contacto</h2>
-          <form @submit.prevent="enviarFormulario" name="contacto-festival" data-netlify="true" data-netlify-honeypot="bot-field" action="/contacto/gracias/">
+          {/* No es estrictamente necesario data-netlify aquí si usas _form.html, pero no hace daño */}
+          {/* El action aquí no se usará debido al @submit.prevent, pero puede ser una referencia */}
+          <form 
+            @submit.prevent="enviarFormulario" 
+            name="contacto-festival" 
+            method="POST" 
+            data-netlify="true" 
+            data-netlify-honeypot="bot-field"
+          >
+            {/* Este input es crucial para que Netlify sepa qué formulario se está enviando vía JS */}
             <input type="hidden" name="form-name" value="contacto-festival" />
-            <p class="hidden-field" style="display:none;">
-              <label>No llenar este campo si eres humano: <input name="bot-field" v-model="formData['bot-field']" /></label>
+            
+            {/* Campo Honeypot */}
+            <p class="hidden-field">
+              <label>No llenar este campo: <input name="bot-field" v-model="formData['bot-field']" /></label>
             </p>
 
             <div>
@@ -80,7 +91,8 @@
             <div v-if="mensajeErrorGeneral" class="mensaje-error">
               {{ mensajeErrorGeneral }}
             </div>
-            <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p> 
+            {/* El mensaje de "Gracias" se manejará con la redirección a la página de gracias */}
+            {/* <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p> */}
 
             <div class="form-actions">
               <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
@@ -106,110 +118,105 @@ export default {
         asunto: '',
         mensaje: '',
         tipoContacto: '',
-        preferenciaContacto: 'email', // Valor por defecto
-        'form-name': 'contacto-festival', // Necesario para Netlify
+        preferenciaContacto: 'email',
         'bot-field': '' // Campo Honeypot
+        // No es necesario 'form-name' aquí si lo añades directamente en el encode
       },
       isSubmitting: false,
       mensajeErrorGeneral: '',
-      errors: { // Para errores específicos de cada campo
-        nombre: '',
-        email: '',
-        asunto: '', // Aunque HTML 'required' lo maneja, podemos añadir mensaje
-        mensaje: '',
-        tipoContacto: ''
+      errors: {
+        nombre: '', email: '', asunto: '', mensaje: '', tipoContacto: ''
       }
+      // mensajeEnviado ya no es necesario si rediriges
     };
   },
   methods: {
     encode(data) {
       return Object.keys(data)
-        .map(
-          key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`
-        )
-        .join("&");
+        .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+        .join('&');
     },
     validateForm() {
-      // Resetear errores antes de cada validación
       this.errors = { nombre: '', email: '', asunto: '', mensaje: '', tipoContacto: '' };
       let isValid = true;
 
-      if (!this.formData.nombre.trim()) {
-        this.errors.nombre = 'El nombre completo es obligatorio.';
-        isValid = false;
-      }
-      if (!this.formData.email.trim()) {
-        this.errors.email = 'El correo electrónico es obligatorio.';
-        isValid = false;
-      } else {
+      if (!this.formData.nombre.trim()) { this.errors.nombre = 'El nombre completo es obligatorio.'; isValid = false; }
+      if (!this.formData.email.trim()) { this.errors.email = 'El correo electrónico es obligatorio.'; isValid = false; }
+      else {
         const emailRegex = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-        if (!emailRegex.test(this.formData.email)) {
-          this.errors.email = 'Por favor, ingresa un formato de correo electrónico válido.';
-          isValid = false;
-        }
+        if (!emailRegex.test(this.formData.email)) { this.errors.email = 'Ingresa un formato de correo válido.'; isValid = false; }
       }
-      if (!this.formData.asunto.trim()) {
-        this.errors.asunto = 'El asunto es obligatorio.';
-        // HTML5 'required' ya lo maneja, pero podemos añadir este mensaje si se quiere más control
-        // isValid = false; // Descomentar si quieres forzar validación Vue incluso si HTML5 está
-      }
-      if (!this.formData.mensaje.trim()) {
-        this.errors.mensaje = 'El mensaje es obligatorio.';
-        isValid = false;
-      }
-      if (!this.formData.tipoContacto) {
-        this.errors.tipoContacto = 'Por favor, selecciona un motivo de contacto.';
-        isValid = false;
-      }
+      if (!this.formData.asunto.trim()) { this.errors.asunto = 'El asunto es obligatorio.'; isValid = false; }
+      if (!this.formData.mensaje.trim()) { this.errors.mensaje = 'El mensaje es obligatorio.'; isValid = false; }
+      if (!this.formData.tipoContacto) { this.errors.tipoContacto = 'Selecciona un motivo de contacto.'; isValid = false; }
+      
       return isValid;
     },
-async enviarFormulario() {
-      this.mensajeErrorGeneral = ''; 
+    async enviarFormulario() {
+      this.mensajeErrorGeneral = '';
       if (!this.validateForm()) {
-        this.isSubmitting = false; 
+        this.isSubmitting = false;
+        return;
+      }
+
+      // Verificar el campo honeypot
+      if (this.formData['bot-field']) {
+        console.log("Honeypot activado, posible bot.");
+        // Simular éxito para el bot o simplemente no hacer nada
+        // this.$router.push({ name: 'graciasContacto' }); // O la ruta a tu página de gracias
         return; 
       }
 
-      if (this.isSubmitting) return;
       this.isSubmitting = true;
       
-      const formDataEncoded = this.encode({ 
-        "form-name": "contacto-festival", // Este es el nombre que Netlify espera
-        "bot-field": this.formData['bot-field'],
+      // Prepara los datos para enviar, asegurando incluir form-name y los campos correctos
+      const dataToSubmit = {
+        "form-name": "contacto-festival", // Nombre del form como lo detecta Netlify
         nombre: this.formData.nombre,
         email: this.formData.email,
         asunto: this.formData.asunto,
         mensaje: this.formData.mensaje,
-        tipoContacto: this.formData.tipoContacto,
-        preferencia_contacto: this.formData.preferenciaContacto 
-      });
+        "tipo-contacto": this.formData.tipoContacto, // Coincidir con el 'name' en _form.html
+        preferencia_contacto: this.formData.preferenciaContacto, // Coincidir con el 'name' en _form.html
+        "bot-field": this.formData['bot-field'] // Enviar el campo honeypot
+      };
 
       try {
-        await fetch("/", {
+        const response = await fetch("/", { // Endpoint raíz para Netlify Forms
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: formDataEncoded
+          body: this.encode(dataToSubmit)
         });
-        this.$router.push({ name: 'graciasContacto' }); 
+
+        if (response.ok) {
+          console.log("Formulario enviado exitosamente a Netlify.");
+          // Redirigir a una página de "gracias" o mostrar un mensaje de éxito.
+          // Si tienes una ruta llamada 'graciasContacto':
+          if (this.$router.hasRoute('graciasContacto')) {
+            this.$router.push({ name: 'graciasContacto' });
+          } else {
+            // Si no hay ruta de gracias, limpia el form (ya no mostramos el mensaje aquí)
+            this.limpiarFormulario();
+            alert('¡Gracias! Tu mensaje ha sido enviado.'); // O un modal más elegante
+          }
+        } else {
+          const errorText = await response.text(); // Intenta obtener más info del error
+          console.error("Error de Netlify al procesar el formulario:", response.status, errorText);
+          this.mensajeErrorGeneral = `Error del servidor (${response.status}). Intenta de nuevo.`;
+        }
       } catch (error) {
         console.error("Error de red o JavaScript al enviar formulario:", error);
-        this.mensajeErrorGeneral = "Hubo un error de red al enviar tu mensaje. Por favor, revisa tu conexión e inténtalo de nuevo.";
+        this.mensajeErrorGeneral = "Error de conexión. Revisa tu internet e intenta de nuevo.";
       } finally {
-        this.isSubmitting = false; 
+        this.isSubmitting = false;
       }
     },
     limpiarFormulario() {
       this.formData = {
-        nombre: '',
-        email: '',
-        asunto: '',
-        mensaje: '',
-        tipoContacto: '',
-        preferenciaContacto: 'email',
-        'form-name': 'contacto-festival',
-        'bot-field': ''
+        nombre: '', email: '', asunto: '', mensaje: '',
+        tipoContacto: '', preferenciaContacto: 'email', 'bot-field': ''
       };
-      this.errors = { nombre: '', email: '', asunto: '', mensaje: '', tipoContacto: '' }; // También limpia los errores
+      this.errors = { nombre: '', email: '', asunto: '', mensaje: '', tipoContacto: '' };
       this.mensajeErrorGeneral = '';
     }
   }
@@ -217,100 +224,39 @@ async enviarFormulario() {
 </script>
 
 <style scoped>
-.contacto-page-content {
-  padding-top: 2rem;
-  padding-bottom: 3rem;
+/* ... (tus estilos scoped sin cambios, pero asegúrate que .hidden-field esté bien oculto) ... */
+.hidden-field { /* Estilo para ocultar el campo honeypot visualmente pero accesible para bots */
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 0;
+  width: 0;
+  z-index: -1;
+  /* O simplemente style="display:none;" en el <p> */
 }
 
-#titulo-contacto h1 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: var(--color-primary-red);
-  font-size: 2.5rem;
-}
-#titulo-contacto > .container > p {
-  text-align: center;
-  color: var(--color-text-medium);
-  margin-bottom: 2.5rem;
-  font-size: 1.1rem;
-}
-
-.contacto-layout {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-}
-
-@media (min-width: 768px) {
-  .contacto-layout {
-    grid-template-columns: 1fr 2fr;
-  }
-}
-
-.info-directa, .formulario-wrapper {
-  padding: 1.5rem;
-  background-color: var(--color-background-surface-dark);
-  border-radius: 8px;
-  border: 1px solid var(--color-border-dark);
-}
-
-.info-directa h2, .formulario-wrapper h2 {
-  color: var(--color-accent-light-blue);
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--color-border-dark);
-  padding-bottom: 0.5rem;
-}
-
+.contacto-page-content { padding-top: 2rem; padding-bottom: 3rem; }
+#titulo-contacto h1 { text-align: center; margin-bottom: 1rem; color: var(--color-primary-red); font-size: 2.5rem; }
+#titulo-contacto > .container > p { text-align: center; color: var(--color-text-medium); margin-bottom: 2.5rem; font-size: 1.1rem; }
+.contacto-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; }
+@media (min-width: 768px) { .contacto-layout { grid-template-columns: 1fr 2fr; } }
+.info-directa, .formulario-wrapper { padding: 1.5rem; background-color: var(--color-background-surface-dark); border-radius: 8px; border: 1px solid var(--color-border-dark); }
+.info-directa h2, .formulario-wrapper h2 { color: var(--color-accent-light-blue); margin-bottom: 1.5rem; border-bottom: 1px solid var(--color-border-dark); padding-bottom: 0.5rem; }
 .info-directa p { margin-bottom: 0.8rem; }
 .info-directa p strong { color: var(--color-text-light); }
-
 .lista-redes { list-style: none; padding-left: 0; }
 .lista-redes li { margin-bottom: 0.5rem; }
 .lista-redes li a { color: var(--color-text-medium); text-decoration: none; transition: color 0.3s ease; }
 .lista-redes li a:hover { color: var(--color-primary-red); }
 .lista-redes li i { margin-right: 0.5em; color: var(--color-accent-light-blue); width: 1.2em; text-align: center; }
-
-#formulario-contacto form div,
-#formulario-contacto form fieldset {
-  margin-bottom: 1.2rem;
-}
-
+#formulario-contacto form div, #formulario-contacto form fieldset { margin-bottom: 1.2rem; }
 .radio-label { display: block; margin-bottom: 0.5rem; cursor: pointer; }
 .radio-label input[type="radio"] { margin-right: 0.5em; vertical-align: middle; }
-
 .form-actions { margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap; }
-
-.btn-outline {
-  background-color: transparent;
-  color: var(--color-accent-light-blue);
-  border: 1px solid var(--color-accent-light-blue);
-}
-.btn-outline:hover {
-  background-color: var(--color-accent-light-blue);
-  color: var(--color-background-surface-dark);
-}
-
-.mensaje-error, .error-text { /* Unificado el estilo de error general y por campo */
-  margin-top: 0.5rem; /* Ajustado para errores por campo */
-  padding: 0.8em 1em;
-  background-color: rgba(var(--color-primary-red), 0.15);
-  border: 1px solid var(--color-primary-red);
-  color: var(--color-primary-red);
-  border-radius: 4px;
-}
-.error-text { /* Específico para errores de campo, más pequeño */
-    font-size: 0.875em;
-    padding: 0.4em 0.6em;
-    margin-top: 0.25rem;
-    background-color: transparent; /* Sin fondo para errores de campo inline */
-    border: none; /* Sin borde para errores de campo inline */
-    /* border-left: 3px solid var(--color-primary-red); /* O un indicador sutil */
-    /* padding-left: 0.5em; */
-}
-.hidden-field { display: none !important; visibility: hidden !important; position: absolute !important; left: -9999px !important; }
-
-@media (max-width: 768px) {
-  #titulo-contacto h1 { font-size: 2rem; }
-  .info-directa h2, .formulario-wrapper h2 { font-size: 1.5rem; }
-}
+.btn-outline { background-color: transparent; color: var(--color-accent-light-blue); border: 1px solid var(--color-accent-light-blue); }
+.btn-outline:hover { background-color: var(--color-accent-light-blue); color: var(--color-background-surface-dark); }
+.mensaje-error, .error-text { margin-top: 0.5rem; padding: 0.8em 1em; background-color: rgba(var(--color-primary-red), 0.15); border: 1px solid var(--color-primary-red); color: var(--color-primary-red); border-radius: 4px; }
+.error-text { font-size: 0.875em; padding: 0.4em 0.6em; margin-top: 0.25rem; background-color: transparent; border: none; }
+@media (max-width: 768px) { #titulo-contacto h1 { font-size: 2rem; } .info-directa h2, .formulario-wrapper h2 { font-size: 1.5rem; } }
 </style>
