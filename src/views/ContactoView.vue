@@ -86,7 +86,7 @@
             <div v-if="mensajeErrorGeneral" class="mensaje-error">
               {{ mensajeErrorGeneral }}
             </div>
-            {/* <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p> */}
+            <p v-if="mensajeEnviado" class="mensaje-confirmacion">¡Gracias! Tu mensaje ha sido enviado.</p>
 
             <div class="form-actions">
               <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
