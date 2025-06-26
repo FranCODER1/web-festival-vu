@@ -1,13 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue' // Mantenemos HomeView con importación normal, ya que es la primera página
-
-// Ya no necesitamos importar ArtistasView, CronogramaView, etc., aquí arriba
+import HomeView from '../views/HomeView.vue' 
+import ComprarTicketView from '../views/ComprarTicketView.vue'
 
 const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView // La vista de inicio se carga inmediatamente
+    component: HomeView 
   },
   {
     path: '/artistas',
@@ -28,6 +27,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "entradas" */ '../views/EntradasView.vue')
   },
   {
+    path: '/comprar-ticket/:tipoDeEntrada', // RUTA DINÁMICA
+    name: 'comprar-ticket',
+    component: ComprarTicketView,
+    props: true // Opcional: Pasa los params de la ruta como props al componente
+  },
+  {
     path: '/ubicacion',
     name: 'ubicacion',
     // Lazy load UbicacionView
@@ -45,12 +50,6 @@ const routes = [
     // Lazy load GraciasContactoView
     component: () => import(/* webpackChunkName: "gracias-contacto" */ '../views/GraciasContactoView.vue')
   },
-  // Opcional: Ruta NotFound (si la creas)
-  // {
-  //   path: '/:catchAll(.*)', 
-  //   name: 'NotFound',
-  //   component: () => import(/* webpackChunkName: "notfound" */ '../views/NotFoundView.vue')
-  // }
 ]
 
 const router = createRouter({

@@ -15,7 +15,7 @@
                 <th>Descripción</th>
                 <th>Precio (Preventa)</th>
                 <th>Precio (Puerta)</th>
-                <th>Enlace de Compra</th>
+                <th>Acción</th> 
               </tr>
             </thead>
             <tbody>
@@ -24,10 +24,10 @@
                 <td data-label="Descripción">{{ entrada.descripcion }}</td>
                 <td data-label="Precio (Preventa)">{{ entrada.precioPreventa }}</td>
                 <td data-label="Precio (Puerta)">{{ entrada.precioPuerta }}</td>
-                <td data-label="Enlace de Compra">
-                  <a :href="entrada.enlaceCompra" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+                <td data-label="Acción">
+                  <router-link :to="`/comprar-ticket/${entrada.id}`" class="btn btn-primary">
                     {{ entrada.textoBoton || 'Comprar Ahora' }}
-                  </a>
+                  </router-link>
                 </td>
               </tr>
             </tbody>
@@ -65,7 +65,8 @@ export default {
           descripcion: 'Acceso a todos los escenarios por un día.',
           precioPreventa: '$2500 ARS',
           precioPuerta: '$3000 ARS',
-          enlaceCompra: 'https://www.example-ticketera.com/sonidos-diaria', // Reemplaza con tu enlace real
+          // enlaceCompra ya no se usa, pero lo dejamos por si acaso
+          enlaceCompra: '...', 
           textoBoton: 'Comprar Diaria'
         },
         {
@@ -74,7 +75,6 @@ export default {
           descripcion: 'Acceso completo a los tres días del festival.',
           precioPreventa: '$6000 ARS',
           precioPuerta: '$7500 ARS',
-          enlaceCompra: 'https://www.example-ticketera.com/sonidos-abono',
           textoBoton: 'Comprar Abono'
         },
         {
@@ -83,7 +83,6 @@ export default {
           descripcion: 'Acceso preferencial, área VIP, consumiciones.',
           precioPreventa: '$5000 ARS',
           precioPuerta: '$6000 ARS',
-          enlaceCompra: 'https://www.example-ticketera.com/sonidos-vip-diaria',
           textoBoton: 'Comprar VIP Diaria'
         },
         {
@@ -92,15 +91,11 @@ export default {
           descripcion: 'Experiencia VIP completa para todo el festival.',
           precioPreventa: '$12000 ARS',
           precioPuerta: '$15000 ARS',
-          enlaceCompra: 'https://www.example-ticketera.com/sonidos-vip-abono',
           textoBoton: 'Comprar Abono VIP'
         }
       ]
     };
-  },
-  // mounted() {
-  //   // Podrías cargar los tipos de entradas desde una API en el futuro
-  // }
+  }
 }
 </script>
 
