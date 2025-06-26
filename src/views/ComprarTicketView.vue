@@ -35,19 +35,14 @@
               <input type="text" id="fechaNacimiento" v-model.trim="form.comprador.fechaNacimiento" placeholder="dd/mm/aaaa" required>
               <p v-if="errors.fechaNacimiento" class="error-message">{{ errors.fechaNacimiento }}</p>
             </div>
-           <div class="form-group" :class="feedbackClass('pais')">
-  <label for="pais">País de Residencia</label>
-  <select id="pais" v-model="form.comprador.pais" required>
-    <option disabled value="">Selecciona tu país</option>
-    
-    <!-- CORRECCIÓN: Usar pais.nameES y pais.iso2 -->
-    <option v-for="pais in paises" :key="pais.iso2" :value="pais.nameES">
-      {{ pais.nameES }}
-    </option>
-
-  </select>
-  <p v-if="errors.pais" class="error-message">{{ errors.pais }}</p>
-</div>
+            <div class="form-group" :class="feedbackClass('pais')">
+              <label for="pais">País de Residencia</label>
+              <select id="pais" v-model="form.comprador.pais" required>
+                <option disabled value="">Selecciona tu país</option>
+                <option v-for="pais in paises" :key="pais.iso2" :value="pais.nameES">{{ pais.nameES }}</option>
+              </select>
+              <p v-if="errors.pais" class="error-message">{{ errors.pais }}</p>
+            </div>
           </fieldset>
 
           <!-- SECCIÓN DATOS DEL EVENTO -->
@@ -114,6 +109,14 @@
               <p v-if="errors.nombreEnTarjeta" class="error-message">{{ errors.nombreEnTarjeta }}</p>
             </div>
           </fieldset>
+
+          <!-- NUEVA SECCIÓN PARA EL RESUMEN DE PRECIO -->
+          <div class="summary-section">
+            <div class="total-price" v-if="form.evento.id && form.entrada.tipo && form.entrada.cantidad > 0">
+              <h3>Total a Pagar:</h3>
+              <span class="price-amount">{{ precioTotal }}</span>
+            </div>
+          </div>
           
           <div class="submit-section">
             <p v-if="!isFormFullyValidated && submitAttempted" class="general-error-message">
@@ -138,21 +141,15 @@ export default {
   name: 'ComprarTicketView',
   data() {
     return {
-      // CORRECCIÓN: Inicializar como arrays vacíos
-      eventos: [], 
-      paises: [], 
+      eventos: [],
+      paises: [],
       tiposDeEntradas: [],
-      
       submitAttempted: false,
       form: {
-        comprador: {
-          nombreCompleto: '', email: '', telefono: '', fechaNacimiento: '', pais: '',
-        },
+        comprador: { nombreCompleto: '', email: '', telefono: '', fechaNacimiento: '', pais: '' },
         evento: { id: '' },
         entrada: { tipo: '', cantidad: 1 },
-        pago: {
-          numeroTarjeta: '', vencimiento: '', cvv: '', nombreEnTarjeta: '',
-        },
+        pago: { numeroTarjeta: '', vencimiento: '', cvv: '', nombreEnTarjeta: '' },
       },
       errors: {
         nombreCompleto: null, email: null, telefono: null, fechaNacimiento: null, pais: null,
@@ -174,18 +171,32 @@ export default {
     preciosDelEvento() {
       return this.eventoSeleccionado ? this.eventoSeleccionado.precios : {};
     },
+    precioTotal() {
+      if (!this.eventoSeleccionado || !this.form.entrada.tipo || this.form.entrada.cantidad < 1) {
+        return 0;
+      }
+      const precioUnitario = this.eventoSeleccionado.precios[this.form.entrada.tipo];
+      if (typeof precioUnitario !== 'number') {
+        return 0;
+      }
+      const total = precioUnitario * this.form.entrada.cantidad;
+      const formatter = new Intl.NumberFormat('es-AR', {
+        style: 'currency',
+        currency: this.eventoSeleccionado.moneda || 'ARS',
+      });
+      return formatter.format(total);
+    },
     isFormValidOnSubmit() {
-        const noErrors = Object.values(this.errors).every(error => error === '');
-        const allFieldsFilled = 
-            this.form.comprador.nombreCompleto && this.form.comprador.email && this.form.comprador.telefono &&
-            this.form.comprador.fechaNacimiento && this.form.comprador.pais && this.form.evento.id &&
-            this.form.entrada.tipo && this.form.entrada.cantidad && this.form.pago.numeroTarjeta &&
-            this.form.pago.vencimiento && this.form.pago.cvv && this.form.pago.nombreEnTarjeta;
-            
-        return noErrors && allFieldsFilled;
+      const noErrors = Object.values(this.errors).every(error => error === '');
+      const allFieldsFilled = 
+        this.form.comprador.nombreCompleto && this.form.comprador.email && this.form.comprador.telefono &&
+        this.form.comprador.fechaNacimiento && this.form.comprador.pais && this.form.evento.id &&
+        this.form.entrada.tipo && this.form.entrada.cantidad && this.form.pago.numeroTarjeta &&
+        this.form.pago.vencimiento && this.form.pago.cvv && this.form.pago.nombreEnTarjeta;
+      return noErrors && allFieldsFilled;
     },
     isFormFullyValidated() {
-        return Object.values(this.errors).every(error => error === '');
+      return Object.values(this.errors).every(error => error === '');
     }
   },
   watch: {
@@ -314,12 +325,10 @@ export default {
     }
   },
   created() {
-    // CORRECCIÓN: Poblar los datos en el hook created
     this.eventos = eventosData.default || eventosData;
     this.paises = paisesData.default || paisesData;
     this.tiposDeEntradas = tiposDeEntradas;
 
-    // Lógica para pre-rellenar el tipo de entrada desde la URL
     if (this.tipoDeEntradaSeleccionado) {
       this.form.entrada.tipo = this.tipoDeEntradaSeleccionado.tipo;
     } else {
@@ -344,6 +353,7 @@ export default {
 .form-row { display: flex; gap: 1rem; }
 .form-row .form-group { flex: 1; }
 .readonly-group input { background-color: var(--color-background-body-dark); cursor: not-allowed; color: var(--color-text-medium); border-style: dashed; }
+.submit-section { margin-top: 1.5rem; }
 .submit-button { width: 100%; padding: 1em; font-size: 1.1rem; transition: background-color 0.3s ease, opacity 0.3s ease; }
 .submit-button:disabled { background-color: var(--color-border-dark); border-color: var(--color-border-dark); cursor: not-allowed; opacity: 0.6; }
 .submit-button:disabled:hover { transform: none; box-shadow: none; background-color: var(--color-border-dark); }
@@ -353,4 +363,29 @@ export default {
 .form-group.has-error input:focus, .form-group.has-error select:focus, .form-group.has-error textarea:focus { box-shadow: 0 0 0 3px rgba(var(--rgb-primary-red), 0.3); }
 .form-group.has-success input, .form-group.has-success select, .form-group.has-success textarea { border-color: #28a745; }
 .form-group.has-success input:focus, .form-group.has-success select:focus, .form-group.has-success textarea:focus { box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3); }
+
+/* Estilos para la nueva sección de precio total */
+.summary-section {
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: var(--color-background-body-dark);
+  border: 1px solid var(--color-border-dark);
+  border-radius: 8px;
+}
+.total-price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.total-price h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--color-text-light);
+}
+.total-price .price-amount {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--color-primary-red);
+}
 </style>
