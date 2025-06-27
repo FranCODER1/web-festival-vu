@@ -426,4 +426,22 @@ export default {
   transition: opacity 0.3s ease;
   opacity: 0.9;
 }
+.form-group input[type="number"] {
+  width: 100%;
+  /* Copiamos los estilos base de los otros inputs si es necesario */
+  padding: 0.8em;
+  border: 1px solid var(--color-border-dark);
+  border-radius: 4px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1rem;
+  background-color: var(--color-background-body-dark); 
+  color: var(--color-text-light); 
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="number"]:focus {
+    outline: none;
+    border-color: var(--color-primary-red);
+    box-shadow: 0 0 0 3px rgba(var(--rgb-primary-red), 0.3);
+}
 </style>
