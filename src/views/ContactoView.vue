@@ -113,15 +113,13 @@ export default {
         mensaje: '',
         tipoContacto: '',
         preferenciaContacto: 'email',
-        'bot-field': '' // Campo Honeypot
-        // No es necesario 'form-name' aquí si lo añades directamente en el encode
+        'bot-field': ''
       },
       isSubmitting: false,
       mensajeErrorGeneral: '',
       errors: {
         nombre: '', email: '', asunto: '', mensaje: '', tipoContacto: ''
       }
-      // mensajeEnviado ya no es necesario si rediriges
     };
   },
   methods: {
@@ -153,30 +151,25 @@ export default {
         return;
       }
 
-      // Verificar el campo honeypot
       if (this.formData['bot-field']) {
         console.log("Honeypot activado, posible bot.");
-        // Simular éxito para el bot o simplemente no hacer nada
-        // this.$router.push({ name: 'graciasContacto' }); // O la ruta a tu página de gracias
         return; 
       }
 
       this.isSubmitting = true;
-      
-      // Prepara los datos para enviar, asegurando incluir form-name y los campos correctos
       const dataToSubmit = {
-        "form-name": "contacto-festival", // Nombre del form como lo detecta Netlify
+        "form-name": "contacto-festival",
         nombre: this.formData.nombre,
         email: this.formData.email,
         asunto: this.formData.asunto,
         mensaje: this.formData.mensaje,
-        "tipo-contacto": this.formData.tipoContacto, // Coincidir con el 'name' en _form.html
-        preferencia_contacto: this.formData.preferenciaContacto, // Coincidir con el 'name' en _form.html
-        "bot-field": this.formData['bot-field'] // Enviar el campo honeypot
+        "tipo-contacto": this.formData.tipoContacto,
+        preferencia_contacto: this.formData.preferenciaContacto, 
+        "bot-field": this.formData['bot-field']
       };
 
       try {
-        const response = await fetch("/", { // Endpoint raíz para Netlify Forms
+        const response = await fetch("/", { 
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: this.encode(dataToSubmit)
@@ -184,17 +177,14 @@ export default {
 
         if (response.ok) {
           console.log("Formulario enviado exitosamente a Netlify.");
-          // Redirigir a una página de "gracias" o mostrar un mensaje de éxito.
-          // Si tienes una ruta llamada 'graciasContacto':
           if (this.$router.hasRoute('graciasContacto')) {
             this.$router.push({ name: 'graciasContacto' });
           } else {
-            // Si no hay ruta de gracias, limpia el form (ya no mostramos el mensaje aquí)
             this.limpiarFormulario();
-            alert('¡Gracias! Tu mensaje ha sido enviado.'); // O un modal más elegante
+            alert('¡Gracias! Tu mensaje ha sido enviado.'); 
           }
         } else {
-          const errorText = await response.text(); // Intenta obtener más info del error
+          const errorText = await response.text();
           console.error("Error de Netlify al procesar el formulario:", response.status, errorText);
           this.mensajeErrorGeneral = `Error del servidor (${response.status}). Intenta de nuevo.`;
         }
@@ -226,7 +216,6 @@ export default {
   height: 0;
   width: 0;
   z-index: -1;
-  /* O simplemente style="display:none;" en el <p> */
 }
 
 .contacto-page-content { padding-top: 2rem; padding-bottom: 3rem; }

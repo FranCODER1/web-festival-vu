@@ -57,7 +57,6 @@
 </template>
 
 <script>
-// Ya no importamos ArtistCard.vue
 
 export default {
   name: 'HomeView',
@@ -109,7 +108,7 @@ export default {
       ]
     };
   },
-  methods: { // Método ahora definido directamente en esta vista
+  methods: {
     getImageUrl(imagePath) {
       if (!imagePath) return '';
       try {
@@ -150,7 +149,7 @@ export default {
   box-shadow: 0 10px 25px rgba(var(--rgb-black), 0.3);
 }
 .destacados-artist-thumbnail {
-  width: 150px; /* O el tamaño que prefieras para destacados */
+  width: 150px; 
   height: 150px;
   border-radius: 50%;
   object-fit: cover;
@@ -158,18 +157,18 @@ export default {
   border: 3px solid var(--color-accent-light-blue);
 }
 .destacados-artist-info {
-  flex-grow: 1; /* Ocupa el espacio restante */
+  flex-grow: 1; 
 }
 .destacados-artist-info h3 {
   color: var(--color-accent-light-blue);
-  font-size: 1.4rem; /* Coincide con ArtistCard */
+  font-size: 1.4rem;
   margin-bottom: 0.5rem;
   line-height: 1.3;
 }
 .destacados-artist-info p {
   font-size: 0.9rem;
   color: var(--color-text-medium);
-  margin-bottom: 0; /* Sin margen inferior si no hay audio */
+  margin-bottom: 0; 
   line-height: 1.5;
 }
 </style>

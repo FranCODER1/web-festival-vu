@@ -1,6 +1,5 @@
 // src/data/tiposDeEntradas.js
 
-// Usamos 'export' para poder importar esta variable en otros archivos.
 export const tiposDeEntradas = [
   {
     id: 'gral-diaria',

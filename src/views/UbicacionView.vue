@@ -65,12 +65,11 @@ export default {
   name: 'UbicacionView',
   data() {
     return {
-      // URL del iframe de Google Maps. Reemplaza con tu mapa embebido.
       mapaSrc: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3550.482744448968!2d-64.26292682383606!3d-27.797135676193816!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x943b521857f5906d%3A0xbef5acd1ba9808d9!2sRivadavia%201049%2C%20G4200%20Santiago%20del%20Estero!5e0!3m2!1ses!2sar!4v1715887214196!5m2!1ses!2sar',
       puntosDeVenta: [
-        // Ejemplo de datos para puntos de venta, puedes añadir más o dejarlos vacíos
-        // { nombre: 'Disquería El Pibe', direccion: 'Peatonal Tucumán 255', horarios: 'Lun-Sáb 9-13hs y 17-21hs' },
-        // { nombre: 'Oficina Festival Centro', direccion: 'Plaza Libertad Local 10', horarios: 'Mar y Jue 10-18hs' }
+        { nombre: 'Oficina de Entradas', direccion: 'Av. Libertad 1234', horarios: 'Lunes a Viernes 10:00-18:00' },
+        { nombre: 'Kiosco Central', direccion: 'Calle San Martín 456', horarios: 'Lunes a Sábado 9:00-20:00' },
+        { nombre: 'Casa de la Cultura', direccion: 'Av. Belgrano 789', horarios: 'Martes a Domingo 10:00-17:00' }
       ]
     };
   }
@@ -89,7 +88,7 @@ export default {
   color: var(--color-primary-red);
   font-size: 2.5rem;
 }
-#lugar-del-evento > .container > p { /* Párrafo introductorio */
+#lugar-del-evento > .container > p {
   text-align: center;
   color: var(--color-text-medium);
   margin-bottom: 2.5rem;
@@ -120,7 +119,7 @@ address {
 }
 
 #direccion h3 {
-  color: var(--color-text-light); /* Un color más claro para subtítulos */
+  color: var(--color-text-light); 
   font-size: 1.2rem;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
@@ -135,8 +134,7 @@ address {
   margin-bottom: 0.3rem;
 }
 
-.video-responsive-wrapper { /* Hereda estilos de tu CSS global */
-  /* No se necesita estilo adicional aquí si ya está definido globalmente */
+.video-responsive-wrapper {
 }
 
 .lista-puntos-venta {
@@ -159,8 +157,8 @@ address {
   #lugar-del-evento h1 {
     font-size: 2rem;
   }
-   #direccion h2, #mapa h2, #puntos-venta h2 {
-    font-size: 1.5rem; /* Ajustar tamaño de H2 en secciones */
+  #direccion h2, #mapa h2, #puntos-venta h2 {
+    font-size: 1.5rem;
   }
 }
 </style>

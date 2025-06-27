@@ -102,23 +102,20 @@ export default {
 .no-eventos td { text-align: center; font-style: italic; color: var(--color-text-medium); padding: 2rem 1rem !important; }
 .loading-placeholder { text-align: center; padding: 3rem; color: var(--color-text-medium); }
 
-@media (max-width: 768px) { /* Tablet y Móvil General */
+@media (max-width: 768px) {
   #horarios-festival h1 { font-size: 2rem; }
   .dia-cronograma h2 { font-size: 1.5rem; }
-  /* Los estilos de tabla responsiva de estilos.css global se aplicarán */
 }
 
-@media (max-width: 360px) { /* Específico para Mobile S - 320px */
+@media (max-width: 360px) {
     #horarios-festival h1 { font-size: 1.8rem; margin-bottom: 1rem; }
     #horarios-festival > .container > p { font-size: 1rem; margin-bottom: 1.5rem; }
     .dia-cronograma { padding: 1rem; margin-bottom: 2rem;}
     .dia-cronograma h2 { font-size: 1.3rem; margin-bottom: 1rem; }
-    .tabla-cronograma th, .tabla-cronograma td { padding: 0.6em 0.5em; /* Menos padding en celdas */ }
-    .tabla-cronograma td { font-size: 0.8rem; /* Texto más pequeño en celdas responsivas */ }
-    .tabla-cronograma td::before { /* Ajustar el label de la tabla responsiva si es necesario */
-        font-size: 0.75rem; /* Label más pequeño */
-        /* width: 30%; */ /* Podrías necesitar ajustar el ancho */
-        /* top: 0.5em; */
+    .tabla-cronograma th, .tabla-cronograma td { padding: 0.6em 0.5em;  }
+    .tabla-cronograma td { font-size: 0.8rem;}
+    .tabla-cronograma td::before { 
+        font-size: 0.75rem;
     }
 }
 </style>

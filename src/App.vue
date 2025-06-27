@@ -293,29 +293,29 @@ ul.mobile-nav-links li a.router-link-exact-active::after {
 /* NUEVA MEDIA QUERY PARA PANTALLAS MUY ESTRECHAS (ej. 320px-360px) */
 @media (max-width: 360px) {
     nav#main-nav .nav-container {
-        height: 45px; /* Reducir altura del navbar */
-        padding: 0 10px; /* Menos padding horizontal */
+        height: 45px;
+        padding: 0 10px; 
     }
-    #logo-nav-img { /* Logo aún más pequeño */
+    #logo-nav-img { 
         width: 30px;
         height: 30px;
     }
-    .hamburger-menu { /* Botón hamburguesa más pequeño */
+    .hamburger-menu { 
         width: 35px;
         height: 35px;
         padding: 5px;
     }
     .hamburger-menu .bar {
-        width: 18px; /* Barras más cortas */
+        width: 18px; 
     }
-    .mobile-menu-overlay { /* Ajustar padding-top si la altura del navbar cambió */
+    .mobile-menu-overlay {
           padding-top: calc(45px + 1rem); 
     }
     ul.mobile-nav-links li a {
-        font-size: 1.3rem; /* Links del menú un poco más pequeños */
+        font-size: 1.3rem;
         padding: 0.8rem 0;
     }
-    ul.mobile-nav-links li a::after { /* Flecha más pequeña y más cerca */
+    ul.mobile-nav-links li a::after { 
         font-size: 1.3em;
         right: -10px;
     }

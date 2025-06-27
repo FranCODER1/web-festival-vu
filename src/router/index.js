@@ -61,7 +61,7 @@ const router = createRouter({
     if (savedPosition) {
       return savedPosition;
     } else if (to.hash) {
-      return { el: to.hash, behavior: 'smooth', top: 80 }; // Ajusta 'top' si tu navbar tiene una altura fija
+      return { el: to.hash, behavior: 'smooth', top: 80 }; 
     } else {
       return { left: 0, top: 0, behavior: 'smooth' };
     }

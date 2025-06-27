@@ -28,7 +28,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - 120px); /* Ajusta 120px según altura de tu nav+footer */
+  min-height: calc(100vh - 120px);
 }
 
 .mensaje-agradecimiento {

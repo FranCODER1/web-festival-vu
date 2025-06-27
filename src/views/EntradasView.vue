@@ -65,7 +65,6 @@ export default {
           descripcion: 'Acceso a todos los escenarios por un día.',
           precioPreventa: '$2500 ARS',
           precioPuerta: '$3000 ARS',
-          // enlaceCompra ya no se usa, pero lo dejamos por si acaso
           enlaceCompra: '...', 
           textoBoton: 'Comprar Diaria'
         },
@@ -111,7 +110,7 @@ export default {
   color: var(--color-primary-red);
   font-size: 2.5rem;
 }
-#tipos-entradas > .container > p { /* Párrafo introductorio */
+#tipos-entradas > .container > p { 
   text-align: center;
   color: var(--color-text-medium);
   margin-bottom: 2.5rem;
@@ -119,21 +118,19 @@ export default {
 }
 
 .table-responsive-wrapper {
-  overflow-x: auto; /* Permite scroll horizontal en tablas grandes en móvil */
+  overflow-x: auto; 
 }
 
 .tabla-entradas {
   width: 100%;
-  /* Estilos base de tabla (colores, bordes) vienen de estilos.css global */
   margin-top: 1rem;
 }
 
-/* Puedes añadir estilos específicos para la tabla de entradas si es necesario */
 .tabla-entradas th, .tabla-entradas td {
-  padding: 0.8em 1em; /* Un poco más de padding */
+  padding: 0.8em 1em;
 }
 
-.tabla-entradas .btn-primary { /* Estilo específico para los botones en la tabla */
+.tabla-entradas .btn-primary {
     padding: 0.6em 1.2em;
     font-size: 0.85rem;
 }
@@ -164,6 +161,5 @@ export default {
   #tipos-entradas h1 {
     font-size: 2rem;
   }
-  /* Los estilos de tabla responsiva de estilos.css se aplicarán aquí */
 }
 </style>
