@@ -83,10 +83,41 @@
             </div>
           </fieldset>
 
+          <!-- NUEVO: Fieldset para el Resumen de Compra -->
+          <fieldset v-if="form.evento.id && form.entrada.tipo && form.entrada.cantidad > 0" class="summary-fieldset">
+            <legend>Resumen de tu Compra</legend>
+            <div class="summary-details">
+              <div class="summary-item">
+                <span class="summary-label">Evento:</span>
+                <span class="summary-value">{{ eventoSeleccionado.evento }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Fecha:</span>
+                <span class="summary-value">{{ formatearFecha(eventoSeleccionado.fecha) }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Ubicación:</span>
+                <span class="summary-value">{{ eventoSeleccionado.lugar }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Tipo de Entrada:</span>
+                <span class="summary-value">{{ form.entrada.tipo }}</span>
+              </div>
+              <div class="summary-item">
+                <span class="summary-label">Cantidad:</span>
+                <span class="summary-value">{{ form.entrada.cantidad }}</span>
+              </div>
+              <div class="summary-item total-summary">
+                <span class="summary-label">Total a Pagar:</span>
+                <span class="summary-value price-amount">{{ precioTotal }}</span>
+              </div>
+            </div>
+          </fieldset>
+
           <!-- SECCIÓN DATOS DE PAGO -->
           <fieldset>
             <legend>3. Datos de Pago</legend>
-            <div class="form-group" :class="feedbackClass('numeroTarjeta')">
+            <div class="form-group card-number-wrapper" :class="feedbackClass('numeroTarjeta')">
               <label for="tarjetaNumero">Número de Tarjeta</label>
               <div class="input-with-logo-wrapper">
                 <input type="text" id="tarjetaNumero" v-model.trim="form.pago.numeroTarjeta" placeholder="•••• •••• •••• ••••" required>
@@ -112,13 +143,6 @@
               <p v-if="errors.nombreEnTarjeta" class="error-message">{{ errors.nombreEnTarjeta }}</p>
             </div>
           </fieldset>
-          
-          <div class="summary-section">
-            <div class="total-price" v-if="form.evento.id && form.entrada.tipo && form.entrada.cantidad > 0">
-              <h3>Total a Pagar:</h3>
-              <span class="price-amount">{{ precioTotal }}</span>
-            </div>
-          </div>
           
           <div class="submit-section">
             <p v-if="!isFormFullyValidated && submitAttempted" class="general-error-message">
@@ -375,18 +399,21 @@ export default {
 .form-group.has-success input, .form-group.has-success select, .form-group.has-success textarea { border-color: #28a745; }
 .form-group.has-success input:focus, .form-group.has-success select:focus, .form-group.has-success textarea:focus { box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3); }
 
-.summary-section { margin-top: 1rem; margin-bottom: 2rem; padding: 1.5rem; background-color: var(--color-background-body-dark); border: 1px solid var(--color-border-dark); border-radius: 8px; }
-.total-price { display: flex; justify-content: space-between; align-items: center; }
-.total-price h3 { margin: 0; font-size: 1.3rem; color: var(--color-text-light); }
-.total-price .price-amount { font-size: 1.8rem; font-weight: bold; color: var(--color-primary-red); }
+/* Resumen de Compra */
+.summary-fieldset { border-color: var(--color-accent-light-blue); background-color: var(--color-background-body-dark); }
+.summary-fieldset legend { color: var(--color-accent-light-blue); }
+.summary-details { display: flex; flex-direction: column; gap: 0.8rem; }
+.summary-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--color-border-dark); }
+.summary-item:last-child { border-bottom: none; }
+.summary-label { color: var(--color-text-medium); font-size: 0.9rem; }
+.summary-value { color: var(--color-text-light); font-weight: 500; text-align: right; }
+.summary-item.total-summary { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-primary-red); border-bottom: none; }
+.total-summary .summary-label, .total-summary .summary-value { font-size: 1.3rem; font-weight: bold; }
+.total-summary .summary-value { color: var(--color-primary-red); }
 
-/* --- CORRECCIÓN FINAL PARA LOGO DE TARJETA --- */
-.input-with-logo-wrapper {
-  position: relative;
-}
-#tarjetaNumero {
-  padding-right: 60px !important;
-}
+/* Detección de tarjeta */
+.input-with-logo-wrapper { position: relative; }
+#tarjetaNumero { padding-right: 60px !important; }
 .card-logo {
   position: absolute;
   right: 15px;
