@@ -88,7 +88,10 @@
             <legend>3. Datos de Pago</legend>
             <div class="form-group" :class="feedbackClass('numeroTarjeta')">
               <label for="tarjetaNumero">Número de Tarjeta</label>
-              <input type="text" id="tarjetaNumero" v-model.trim="form.pago.numeroTarjeta" placeholder="•••• •••• •••• ••••" required>
+              <div class="input-with-logo-wrapper">
+                <input type="text" id="tarjetaNumero" v-model.trim="form.pago.numeroTarjeta" placeholder="•••• •••• •••• ••••" required>
+                <img v-if="detectedCardType" :src="cardLogo" alt="Logo de tarjeta" class="card-logo">
+              </div>
               <p v-if="errors.numeroTarjeta" class="error-message">{{ errors.numeroTarjeta }}</p>
             </div>
             <div class="form-row">
@@ -109,8 +112,7 @@
               <p v-if="errors.nombreEnTarjeta" class="error-message">{{ errors.nombreEnTarjeta }}</p>
             </div>
           </fieldset>
-
-          <!-- NUEVA SECCIÓN PARA EL RESUMEN DE PRECIO -->
+          
           <div class="summary-section">
             <div class="total-price" v-if="form.evento.id && form.entrada.tipo && form.entrada.cantidad > 0">
               <h3>Total a Pagar:</h3>
@@ -145,6 +147,7 @@ export default {
       paises: [],
       tiposDeEntradas: [],
       submitAttempted: false,
+      detectedCardType: null,
       form: {
         comprador: { nombreCompleto: '', email: '', telefono: '', fechaNacimiento: '', pais: '' },
         evento: { id: '' },
@@ -172,19 +175,21 @@ export default {
       return this.eventoSeleccionado ? this.eventoSeleccionado.precios : {};
     },
     precioTotal() {
-      if (!this.eventoSeleccionado || !this.form.entrada.tipo || this.form.entrada.cantidad < 1) {
-        return 0;
-      }
+      if (!this.eventoSeleccionado || !this.form.entrada.tipo || this.form.entrada.cantidad < 1) return 0;
       const precioUnitario = this.eventoSeleccionado.precios[this.form.entrada.tipo];
-      if (typeof precioUnitario !== 'number') {
-        return 0;
-      }
+      if (typeof precioUnitario !== 'number') return 0;
       const total = precioUnitario * this.form.entrada.cantidad;
-      const formatter = new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: this.eventoSeleccionado.moneda || 'ARS',
-      });
+      const formatter = new Intl.NumberFormat('es-AR', { style: 'currency', currency: this.eventoSeleccionado.moneda || 'ARS' });
       return formatter.format(total);
+    },
+    cardLogo() {
+      if (!this.detectedCardType) return '';
+      try {
+        return require(`@/assets/img/cards/${this.detectedCardType}.png`);
+      } catch (e) {
+        console.warn(`No se encontró el logo para: ${this.detectedCardType}`);
+        return '';
+      }
     },
     isFormValidOnSubmit() {
       const noErrors = Object.values(this.errors).every(error => error === '');
@@ -208,7 +213,14 @@ export default {
     'form.evento.id'() { this.validateSimpleRequired('evento', 'Evento'); this.form.entrada.tipo = ''; },
     'form.entrada.tipo'() { this.validateSimpleRequired('tipoEntrada', 'Tipo de entrada'); },
     'form.entrada.cantidad'() { this.validateCantidad(); },
-    'form.pago.numeroTarjeta'() { this.validateNumeroTarjeta(); },
+    'form.pago.numeroTarjeta'(newValue) {
+      const value = newValue.replace(/\s/g, '');
+      if (/^4/.test(value)) { this.detectedCardType = 'visa'; } 
+      else if (/^5[1-5]/.test(value)) { this.detectedCardType = 'mastercard'; } 
+      else if (/^3[47]/.test(value)) { this.detectedCardType = 'amex'; } 
+      else { this.detectedCardType = null; }
+      this.validateNumeroTarjeta();
+    },
     'form.pago.vencimiento'() { this.validateVencimiento(); },
     'form.pago.cvv'() { this.validateCvv(); },
     'form.pago.nombreEnTarjeta'() { this.validateNombreEnTarjeta(); },
@@ -340,14 +352,13 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos para el formulario y feedback de validación */
 .comprar-ticket-page-content { padding: 2rem 0 3rem 0; }
 #form-compra-entradas h1, #form-compra-entradas > div > p { text-align: center; margin-bottom: 0.5rem; }
 #form-compra-entradas > div > p { color: var(--color-text-medium); font-size: 1.1rem; margin-bottom: 2.5rem; }
 .ticket-form { max-width: 800px; margin: 0 auto; background-color: var(--color-background-surface-dark); padding: 2rem; border-radius: 8px; }
 .ticket-form fieldset { border: 1px solid var(--color-border-dark); padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; }
 .ticket-form legend { padding: 0 0.5em; font-weight: bold; color: var(--color-accent-light-blue); font-size: 1.2rem; }
-.form-group { margin-bottom: 1.2rem; position: relative; }
+.form-group { margin-bottom: 1.5rem; } 
 .form-group:last-child { margin-bottom: 0; }
 .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
 .form-row { display: flex; gap: 1rem; }
@@ -357,35 +368,35 @@ export default {
 .submit-button { width: 100%; padding: 1em; font-size: 1.1rem; transition: background-color 0.3s ease, opacity 0.3s ease; }
 .submit-button:disabled { background-color: var(--color-border-dark); border-color: var(--color-border-dark); cursor: not-allowed; opacity: 0.6; }
 .submit-button:disabled:hover { transform: none; box-shadow: none; background-color: var(--color-border-dark); }
-.error-message { color: var(--color-primary-red); font-size: 0.8rem; margin-top: 0.25rem; }
+.error-message { color: var(--color-primary-red); font-size: 0.8rem; margin-top: 0.35rem; min-height: 1em; }
 .general-error-message { text-align: center; color: var(--color-primary-red); margin-bottom: 1rem; background-color: rgba(var(--rgb-primary-red), 0.1); padding: 0.75em; border-radius: 4px; }
 .form-group.has-error input, .form-group.has-error select, .form-group.has-error textarea { border-color: var(--color-primary-red); background-color: rgba(var(--rgb-primary-red), 0.05); }
 .form-group.has-error input:focus, .form-group.has-error select:focus, .form-group.has-error textarea:focus { box-shadow: 0 0 0 3px rgba(var(--rgb-primary-red), 0.3); }
 .form-group.has-success input, .form-group.has-success select, .form-group.has-success textarea { border-color: #28a745; }
 .form-group.has-success input:focus, .form-group.has-success select:focus, .form-group.has-success textarea:focus { box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.3); }
 
-/* Estilos para la nueva sección de precio total */
-.summary-section {
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
-  background-color: var(--color-background-body-dark);
-  border: 1px solid var(--color-border-dark);
-  border-radius: 8px;
+.summary-section { margin-top: 1rem; margin-bottom: 2rem; padding: 1.5rem; background-color: var(--color-background-body-dark); border: 1px solid var(--color-border-dark); border-radius: 8px; }
+.total-price { display: flex; justify-content: space-between; align-items: center; }
+.total-price h3 { margin: 0; font-size: 1.3rem; color: var(--color-text-light); }
+.total-price .price-amount { font-size: 1.8rem; font-weight: bold; color: var(--color-primary-red); }
+
+/* --- CORRECCIÓN FINAL PARA LOGO DE TARJETA --- */
+.input-with-logo-wrapper {
+  position: relative;
 }
-.total-price {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+#tarjetaNumero {
+  padding-right: 60px !important;
 }
-.total-price h3 {
-  margin: 0;
-  font-size: 1.3rem;
-  color: var(--color-text-light);
-}
-.total-price .price-amount {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: var(--color-primary-red);
+.card-logo {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 28px !important;
+  width: auto !important;
+  max-width: 40px !important;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  opacity: 0.9;
 }
 </style>
