@@ -120,7 +120,7 @@ export default {
 /* --- NAVBAR ESTILOS BASE --- */
 nav#main-nav {
   background-color: rgba(var(--rgb-background-surface-dark), 0.7);
-  -webkit-backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Para Safari */
   backdrop-filter: blur(10px);
   padding: 0.5rem 0;
   position: sticky;
@@ -218,7 +218,7 @@ ul.desktop-nav-links li a.router-link-exact-active::before {
 .mobile-menu-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
   background-color: rgba(var(--rgb-background-body-dark), 0.85);
-  -webkit-backdrop-filter: blur(12px) saturate(110%);
+  -webkit-backdrop-filter: blur(12px) saturate(110%); /* Para Safari */
   backdrop-filter: blur(12px) saturate(110%);
   z-index: 1010; 
   display: flex; flex-direction: column; align-items: center; justify-content: center;

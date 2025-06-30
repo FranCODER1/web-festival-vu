@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue' 
-import ComprarTicketView from '../views/ComprarTicketView.vue'
+import ComprarTicketView from '../views/ComprarTicketView.vue';
 
 const routes = [
   {
@@ -27,10 +27,9 @@ const routes = [
     component: () => import(/* webpackChunkName: "entradas" */ '../views/EntradasView.vue')
   },
   {
-    path: '/comprar-ticket/:tipoDeEntrada', // RUTA DINÁMICA
+    path: '/comprar-ticket',
     name: 'comprar-ticket',
     component: ComprarTicketView,
-    props: true // Opcional: Pasa los params de la ruta como props al componente
   },
   {
     path: '/ubicacion',

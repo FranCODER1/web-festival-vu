@@ -2,37 +2,35 @@
   <main class="comprar-ticket-page-content">
     <div class="container">
       <section id="form-compra-entradas">
-        <div v-if="tipoDeEntradaSeleccionado">
-          <h1>Comprando: {{ tipoDeEntradaSeleccionado.tipo }}</h1>
-          <p>Estás a solo unos pasos de conseguir tu entrada. Precio Preventa: <strong>{{ tipoDeEntradaSeleccionado.precioPreventa }}</strong></p>
-        </div>
-        <div v-else>
-          <h1>Tipo de Entrada no encontrado</h1>
-          <p>Por favor, vuelve a la <router-link to="/entradas">página de entradas</router-link> y selecciona una opción válida.</p>
-        </div>
+        <h1>Finaliza tu Compra</h1>
+        <p>Por favor, completa todos los campos para asegurar tus entradas.</p>
 
-        <form v-if="tipoDeEntradaSeleccionado" @submit.prevent="procesarCompra" class="ticket-form" novalidate>
+        <form name="compra-entradas-completo" method="POST" data-netlify="true" data-netlify-honeypot="bot-field" @submit.prevent="procesarCompra" class="ticket-form" novalidate>
+          <!-- Campos ocultos para Netlify -->
+          <input type="hidden" name="form-name" value="compra-entradas-completo" />
+          <p style="display: none;"><label>No llenar: <input name="bot-field" /></label></p>
+
           <!-- SECCIÓN DATOS DEL COMPRADOR -->
           <fieldset>
             <legend>1. Tus Datos Personales</legend>
             <div class="form-group" :class="feedbackClass('nombreCompleto')">
               <label for="nombreCompleto">Nombre Completo</label>
-              <input type="text" id="nombreCompleto" v-model.trim="form.comprador.nombreCompleto" placeholder="Ej: Juan Pérez" required>
+              <input type="text" id="nombreCompleto" name="nombreCompleto" v-model.trim="form.comprador.nombreCompleto" placeholder="Ej: Juan Pérez" required>
               <p v-if="errors.nombreCompleto" class="error-message">{{ errors.nombreCompleto }}</p>
             </div>
             <div class="form-group" :class="feedbackClass('email')">
               <label for="email">Correo Electrónico</label>
-              <input type="email" id="email" v-model.trim="form.comprador.email" placeholder="ejemplo@correo.com" required>
+              <input type="email" id="email" name="email" v-model.trim="form.comprador.email" placeholder="ejemplo@correo.com" required>
               <p v-if="errors.email" class="error-message">{{ errors.email }}</p>
             </div>
             <div class="form-group" :class="feedbackClass('telefono')">
               <label for="telefono">Número de Teléfono</label>
-              <input type="tel" id="telefono" v-model.trim="form.comprador.telefono" placeholder="Ej: 1122334455 (10 dígitos)" required>
+              <input type="tel" id="telefono" name="telefono" v-model.trim="form.comprador.telefono" placeholder="Ej: 1122334455 (10 dígitos)" required>
               <p v-if="errors.telefono" class="error-message">{{ errors.telefono }}</p>
             </div>
             <div class="form-group" :class="feedbackClass('fechaNacimiento')">
               <label for="fechaNacimiento">Fecha de Nacimiento</label>
-              <input type="text" id="fechaNacimiento" v-model.trim="form.comprador.fechaNacimiento" placeholder="dd/mm/aaaa" required>
+              <input type="text" id="fechaNacimiento" name="fechaNacimiento" v-model.trim="form.comprador.fechaNacimiento" placeholder="dd/mm/aaaa" required>
               <p v-if="errors.fechaNacimiento" class="error-message">{{ errors.fechaNacimiento }}</p>
             </div>
             <div class="form-group" :class="feedbackClass('pais')">
@@ -50,27 +48,17 @@
             <legend>2. Elige tu Evento y Cantidad</legend>
             <div class="form-group" :class="feedbackClass('evento')">
               <label for="evento">Selecciona el Evento</label>
-              <select id="evento" v-model="form.evento.id" required>
+              <select id="evento" name="evento" v-model="form.evento.id" required>
                 <option disabled value="">Selecciona un evento</option>
                 <option v-for="evento in eventos" :key="evento.id" :value="evento.id">
-                  {{ evento.evento }} - {{ formatearFecha(evento.fecha) }}
+                  {{ evento.evento }} - {{ evento.fecha }}
                 </option>
               </select>
               <p v-if="errors.evento" class="error-message">{{ errors.evento }}</p>
             </div>
-            <div class="form-row">
-              <div class="form-group readonly-group">
-                <label>Fecha del Evento</label>
-                <input type="text" :value="eventoSeleccionado ? formatearFecha(eventoSeleccionado.fecha) : ''" readonly>
-              </div>
-              <div class="form-group readonly-group">
-                <label>Ubicación del Evento</label>
-                <input type="text" :value="eventoSeleccionado ? `${eventoSeleccionado.lugar}, ${eventoSeleccionado.ciudad}` : ''" readonly>
-              </div>
-            </div>
             <div class="form-group" :class="feedbackClass('tipoEntrada')">
               <label for="tipoEntrada">Tipo de Entrada</label>
-              <select id="tipoEntrada" v-model="form.entrada.tipo" :disabled="!form.evento.id" required>
+              <select id="tipoEntrada" name="tipoEntrada" v-model="form.entrada.tipo" :disabled="!form.evento.id" required>
                 <option disabled value="">Selecciona un tipo</option>
                 <option v-for="(precio, tipo) in preciosDelEvento" :key="tipo" :value="tipo">{{ tipo }}</option>
               </select>
@@ -78,38 +66,34 @@
             </div>
             <div class="form-group" :class="feedbackClass('cantidad')">
               <label for="cantidad">Cantidad de Entradas (máx. 6)</label>
-              <input type="number" id="cantidad" v-model.number="form.entrada.cantidad" min="1" max="6" required>
+              <input type="number" id="cantidad" name="cantidad" v-model.number="form.entrada.cantidad" min="1" max="6" required>
               <p v-if="errors.cantidad" class="error-message">{{ errors.cantidad }}</p>
             </div>
           </fieldset>
-
-          <!-- NUEVO: Fieldset para el Resumen de Compra -->
-          <fieldset v-if="form.evento.id && form.entrada.tipo && form.entrada.cantidad > 0" class="summary-fieldset">
+          
+          <!-- RESUMEN DE COMPRA -->
+          <fieldset v-if="resumen.esValido" class="summary-fieldset">
             <legend>Resumen de tu Compra</legend>
             <div class="summary-details">
               <div class="summary-item">
                 <span class="summary-label">Evento:</span>
-                <span class="summary-value">{{ eventoSeleccionado.evento }}</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-label">Fecha:</span>
-                <span class="summary-value">{{ formatearFecha(eventoSeleccionado.fecha) }}</span>
-              </div>
-              <div class="summary-item">
-                <span class="summary-label">Ubicación:</span>
-                <span class="summary-value">{{ eventoSeleccionado.lugar }}</span>
+                <span class="summary-value">{{ resumen.eventoNombre }}</span>
               </div>
               <div class="summary-item">
                 <span class="summary-label">Tipo de Entrada:</span>
-                <span class="summary-value">{{ form.entrada.tipo }}</span>
+                <span class="summary-value">{{ resumen.tipoEntrada }}</span>
               </div>
               <div class="summary-item">
                 <span class="summary-label">Cantidad:</span>
-                <span class="summary-value">{{ form.entrada.cantidad }}</span>
+                <span class="summary-value">{{ resumen.cantidad }}</span>
+              </div>
+               <div v-if="resumen.cantidad > 1" class="summary-item price-breakdown">
+                <span class="summary-label"></span>
+                <span class="summary-value">({{ resumen.precioUnitarioFormateado }} por entrada)</span>
               </div>
               <div class="summary-item total-summary">
                 <span class="summary-label">Total a Pagar:</span>
-                <span class="summary-value price-amount">{{ precioTotal }}</span>
+                <span class="summary-value price-amount">{{ resumen.precioTotalFormateado }}</span>
               </div>
             </div>
           </fieldset>
@@ -120,7 +104,7 @@
             <div class="form-group card-number-wrapper" :class="feedbackClass('numeroTarjeta')">
               <label for="tarjetaNumero">Número de Tarjeta</label>
               <div class="input-with-logo-wrapper">
-                <input type="text" id="tarjetaNumero" v-model.trim="form.pago.numeroTarjeta" placeholder="•••• •••• •••• ••••" required>
+                <input type="text" id="tarjetaNumero" name="numeroTarjeta" v-model.trim="form.pago.numeroTarjeta" placeholder="•••• •••• •••• ••••" required>
                 <img v-if="detectedCardType" :src="cardLogo" alt="Logo de tarjeta" class="card-logo">
               </div>
               <p v-if="errors.numeroTarjeta" class="error-message">{{ errors.numeroTarjeta }}</p>
@@ -128,18 +112,18 @@
             <div class="form-row">
               <div class="form-group" :class="feedbackClass('vencimiento')">
                 <label for="tarjetaVencimiento">Vencimiento (MM/AA)</label>
-                <input type="text" id="tarjetaVencimiento" v-model.trim="form.pago.vencimiento" placeholder="MM/AA" required>
+                <input type="text" id="tarjetaVencimiento" name="vencimiento" v-model.trim="form.pago.vencimiento" placeholder="MM/AA" required>
                 <p v-if="errors.vencimiento" class="error-message">{{ errors.vencimiento }}</p>
               </div>
               <div class="form-group" :class="feedbackClass('cvv')">
                 <label for="tarjetaCVV">CVV</label>
-                <input type="text" id="tarjetaCVV" v-model.trim="form.pago.cvv" placeholder="123" required>
+                <input type="text" id="tarjetaCVV" name="cvv" v-model.trim="form.pago.cvv" placeholder="123" required>
                 <p v-if="errors.cvv" class="error-message">{{ errors.cvv }}</p>
               </div>
             </div>
             <div class="form-group" :class="feedbackClass('nombreEnTarjeta')">
               <label for="tarjetaNombre">Nombre en la Tarjeta</label>
-              <input type="text" id="tarjetaNombre" v-model.trim="form.pago.nombreEnTarjeta" placeholder="Como aparece en la tarjeta" required>
+              <input type="text" id="tarjetaNombre" name="nombreEnTarjeta" v-model.trim="form.pago.nombreEnTarjeta" placeholder="Como aparece en la tarjeta" required>
               <p v-if="errors.nombreEnTarjeta" class="error-message">{{ errors.nombreEnTarjeta }}</p>
             </div>
           </fieldset>
@@ -161,15 +145,13 @@
 <script>
 import eventosData from '@/data/eventos.json';
 import paisesData from '@/data/paises.json';
-import { tiposDeEntradas } from '@/data/tiposDeEntradas.js';
 
 export default {
   name: 'ComprarTicketView',
   data() {
     return {
-      eventos: [],
-      paises: [],
-      tiposDeEntradas: [],
+      eventos: eventosData,
+      paises: paisesData,
       submitAttempted: false,
       detectedCardType: null,
       form: {
@@ -186,43 +168,38 @@ export default {
     };
   },
   computed: {
-    tipoDeEntradaSeleccionado() {
-      const tipoId = this.$route.params.tipoDeEntrada;
-      if (!tipoId || !this.tiposDeEntradas) return null;
-      return this.tiposDeEntradas.find(entrada => entrada.id === tipoId);
-    },
     eventoSeleccionado() {
-      if (!this.form.evento.id) return null;
-      return this.eventos.find(evento => evento.id === this.form.evento.id);
+      return this.eventos.find(evento => evento.id === this.form.evento.id) || null;
     },
     preciosDelEvento() {
       return this.eventoSeleccionado ? this.eventoSeleccionado.precios : {};
     },
-    precioTotal() {
-      if (!this.eventoSeleccionado || !this.form.entrada.tipo || this.form.entrada.cantidad < 1) return 0;
-      const precioUnitario = this.eventoSeleccionado.precios[this.form.entrada.tipo];
-      if (typeof precioUnitario !== 'number') return 0;
-      const total = precioUnitario * this.form.entrada.cantidad;
-      const formatter = new Intl.NumberFormat('es-AR', { style: 'currency', currency: this.eventoSeleccionado.moneda || 'ARS' });
-      return formatter.format(total);
+    resumen() {
+      const evento = this.eventoSeleccionado;
+      const tipo = this.form.entrada.tipo;
+      const cantidad = this.form.entrada.cantidad;
+      if (!evento || !tipo || cantidad < 1) return { esValido: false };
+      const precioUnitario = evento.precios[tipo];
+      if (typeof precioUnitario !== 'number') return { esValido: false };
+      const total = precioUnitario * cantidad;
+      const formatter = new Intl.NumberFormat('es-AR', { style: 'currency', currency: evento.moneda || 'ARS' });
+      return {
+        esValido: true,
+        eventoNombre: evento.evento,
+        tipoEntrada: tipo,
+        cantidad,
+        precioUnitarioFormateado: formatter.format(precioUnitario),
+        precioTotalFormateado: formatter.format(total),
+      };
     },
     cardLogo() {
       if (!this.detectedCardType) return '';
-      try {
-        return require(`@/assets/img/cards/${this.detectedCardType}.png`);
-      } catch (e) {
-        console.warn(`No se encontró el logo para: ${this.detectedCardType}`);
-        return '';
-      }
+      try { return require(`@/assets/img/cards/${this.detectedCardType}.png`); } 
+      catch (e) { console.warn(`No se encontró logo para: ${this.detectedCardType}`); return ''; }
     },
     isFormValidOnSubmit() {
-      const noErrors = Object.values(this.errors).every(error => error === '');
-      const allFieldsFilled = 
-        this.form.comprador.nombreCompleto && this.form.comprador.email && this.form.comprador.telefono &&
-        this.form.comprador.fechaNacimiento && this.form.comprador.pais && this.form.evento.id &&
-        this.form.entrada.tipo && this.form.entrada.cantidad && this.form.pago.numeroTarjeta &&
-        this.form.pago.vencimiento && this.form.pago.cvv && this.form.pago.nombreEnTarjeta;
-      return noErrors && allFieldsFilled;
+      const allFieldsTouched = Object.values(this.errors).every(error => error !== null);
+      return this.isFormFullyValidated && allFieldsTouched;
     },
     isFormFullyValidated() {
       return Object.values(this.errors).every(error => error === '');
@@ -234,7 +211,12 @@ export default {
     'form.comprador.telefono'() { this.validateTelefono(); },
     'form.comprador.fechaNacimiento'() { this.validateFechaNacimiento(); },
     'form.comprador.pais'() { this.validateSimpleRequired('pais', 'País'); },
-    'form.evento.id'() { this.validateSimpleRequired('evento', 'Evento'); this.form.entrada.tipo = ''; },
+    'form.evento.id'(newId, oldId) {
+      if(newId !== oldId) {
+        this.form.entrada.tipo = '';
+        this.$nextTick(() => { this.validateSimpleRequired('evento', 'Evento'); });
+      }
+    },
     'form.entrada.tipo'() { this.validateSimpleRequired('tipoEntrada', 'Tipo de entrada'); },
     'form.entrada.cantidad'() { this.validateCantidad(); },
     'form.pago.numeroTarjeta'(newValue) {
@@ -279,12 +261,12 @@ export default {
       const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
       if (!regex.test(value)) { this.errors.fechaNacimiento = 'El formato debe ser dd/mm/aaaa.'; return false; }
       const [, dia, mes, anio] = value.match(regex);
-      const fechaNac = new Date(`${anio}-${mes}-${dia}`);
+      const fechaNac = new Date(`${anio}-${mes}-${dia}T00:00:00Z`);
       if (isNaN(fechaNac.getTime())) { this.errors.fechaNacimiento = 'La fecha no es válida.'; return false; }
       const hoy = new Date();
-      let edad = hoy.getFullYear() - fechaNac.getFullYear();
-      const m = hoy.getMonth() - fechaNac.getMonth();
-      if (m < 0 || (m === 0 && hoy.getDate() < fechaNac.getDate())) edad--;
+      let edad = hoy.getUTCFullYear() - fechaNac.getUTCFullYear();
+      const m = hoy.getUTCMonth() - fechaNac.getUTCMonth();
+      if (m < 0 || (m === 0 && hoy.getUTCDate() < fechaNac.getUTCDate())) edad--;
       if (edad < 18) { this.errors.fechaNacimiento = 'Debes ser mayor de 18 años para comprar.'; return false; }
       this.errors.fechaNacimiento = ''; return true;
     },
@@ -309,8 +291,8 @@ export default {
       const anioNum = parseInt(`20${anio}`, 10);
       if (mesNum < 1 || mesNum > 12) { this.errors.vencimiento = 'El mes no es válido.'; return false; }
       const hoy = new Date();
-      const fechaVenc = new Date(anioNum, mesNum, 0); 
-      if (fechaVenc < hoy) { this.errors.vencimiento = 'La tarjeta ha expirado.'; return false; }
+      const ultimoDiaMesVenc = new Date(anioNum, mesNum, 0);
+      if (ultimoDiaMesVenc < hoy) { this.errors.vencimiento = 'La tarjeta ha expirado.'; return false; }
       this.errors.vencimiento = ''; return true;
     },
     validateCvv() {
@@ -336,49 +318,50 @@ export default {
         this.errors[field] = ''; return true;
     },
     validateAllFields() {
-        const validations = [
-            this.validateNombreCompleto(), this.validateEmail(), this.validateTelefono(), this.validateFechaNacimiento(),
-            this.validateSimpleRequired('pais', 'País'), this.validateSimpleRequired('evento', 'Evento'),
-            this.validateSimpleRequired('tipoEntrada', 'Tipo de entrada'), this.validateCantidad(),
-            this.validateNumeroTarjeta(), this.validateVencimiento(), this.validateCvv(), this.validateNombreEnTarjeta()
-        ];
-        return validations.every(isValid => isValid);
+      const validations = [
+        this.validateNombreCompleto(), this.validateEmail(), this.validateTelefono(), this.validateFechaNacimiento(),
+        this.validateSimpleRequired('pais', 'País'), this.validateSimpleRequired('evento', 'Evento'),
+        this.validateSimpleRequired('tipoEntrada', 'Tipo de entrada'), this.validateCantidad(),
+        this.validateNumeroTarjeta(), this.validateVencimiento(), this.validateCvv(), this.validateNombreEnTarjeta()
+      ];
+      return validations.every(isValid => isValid);
     },
-    formatearFecha(fechaISO) {
-      if (!fechaISO) return '';
-      const opciones = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
-      return new Date(fechaISO).toLocaleDateString('es-ES', opciones);
-    },
+    encode(data) { return Object.keys(data).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`).join('&'); },
     procesarCompra() {
       this.submitAttempted = true;
-      const isFormValid = this.validateAllFields();
-      if (isFormValid) {
-        console.log('Formulario válido. Enviando datos:', this.form);
-        alert('¡Compra procesada con éxito! (Simulación)');
+      if (this.validateAllFields()) {
+        console.log('Formulario válido. Enviando datos a Netlify...');
+        const datosParaNetlify = {
+          'form-name': 'compra-entradas-completo',
+          ...this.form.comprador,
+          'evento-seleccionado': this.resumen.eventoNombre,
+          'tipo-entrada': this.resumen.tipoEntrada,
+          'cantidad-entradas': this.resumen.cantidad,
+          'total-pagado': this.resumen.precioTotalFormateado,
+          'numero-tarjeta-enmascarado': `**** **** **** ${this.form.pago.numeroTarjeta.slice(-4)}`,
+        };
+        fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: this.encode(datosParaNetlify) })
+          .then(() => {
+            alert('¡Gracias! Tu solicitud de compra ha sido recibida. (Simulación exitosa)');
+            this.$router.push('/gracias'); // Redirige a una página de agradecimiento
+          })
+          .catch(error => {
+            alert(`Hubo un error al procesar tu solicitud: ${error}`);
+          });
       } else {
         console.log('Formulario inválido. No se envía.');
       }
     }
   },
-  created() {
-    this.eventos = eventosData.default || eventosData;
-    this.paises = paisesData.default || paisesData;
-    this.tiposDeEntradas = tiposDeEntradas;
-
-    if (this.tipoDeEntradaSeleccionado) {
-      this.form.entrada.tipo = this.tipoDeEntradaSeleccionado.tipo;
-    } else {
-      console.error("Tipo de entrada no válido en la URL.");
-      this.$router.push('/entradas');
-    }
-  }
+  // No se necesita created() ya que el usuario selecciona todo desde el formulario
 }
 </script>
 
 <style scoped>
+/* Copia y pega todos los estilos scoped de tu versión original aquí */
 .comprar-ticket-page-content { padding: 2rem 0 3rem 0; }
-#form-compra-entradas h1, #form-compra-entradas > div > p { text-align: center; margin-bottom: 0.5rem; }
-#form-compra-entradas > div > p { color: var(--color-text-medium); font-size: 1.1rem; margin-bottom: 2.5rem; }
+#form-compra-entradas h1, #form-compra-entradas p { text-align: center; margin-bottom: 0.5rem; }
+#form-compra-entradas p { color: var(--color-text-medium); font-size: 1.1rem; margin-bottom: 2.5rem; }
 .ticket-form { max-width: 800px; margin: 0 auto; background-color: var(--color-background-surface-dark); padding: 2rem; border-radius: 8px; }
 .ticket-form fieldset { border: 1px solid var(--color-border-dark); padding: 1.5rem; border-radius: 4px; margin-bottom: 2rem; }
 .ticket-form legend { padding: 0 0.5em; font-weight: bold; color: var(--color-accent-light-blue); font-size: 1.2rem; }
@@ -410,6 +393,8 @@ export default {
 .summary-item.total-summary { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--color-primary-red); border-bottom: none; }
 .total-summary .summary-label, .total-summary .summary-value { font-size: 1.3rem; font-weight: bold; }
 .total-summary .summary-value { color: var(--color-primary-red); }
+.price-breakdown .summary-label { flex-grow: 1; } /* Empuja el texto a la derecha */
+.price-breakdown .summary-value { font-size: 0.8rem; font-style: italic; }
 
 /* Detección de tarjeta */
 .input-with-logo-wrapper { position: relative; }
@@ -425,23 +410,5 @@ export default {
   pointer-events: none;
   transition: opacity 0.3s ease;
   opacity: 0.9;
-}
-.form-group input[type="number"] {
-  width: 100%;
-  /* Copiamos los estilos base de los otros inputs si es necesario */
-  padding: 0.8em;
-  border: 1px solid var(--color-border-dark);
-  border-radius: 4px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 1rem;
-  background-color: var(--color-background-body-dark); 
-  color: var(--color-text-light); 
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-group input[type="number"]:focus {
-    outline: none;
-    border-color: var(--color-primary-red);
-    box-shadow: 0 0 0 3px rgba(var(--rgb-primary-red), 0.3);
 }
 </style>
