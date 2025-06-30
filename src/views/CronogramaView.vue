@@ -7,8 +7,8 @@
 
         <div v-if="diasDelFestival && diasDelFestival.length > 0">
           <div v-for="dia in diasDelFestival" :key="dia.fechaISO" class="dia-cronograma">
-            <h2>{{ formatearFecha(dia.fechaISO) }} - {{ dia.nombreDia }}</h2>
-            <div class="table-responsive-wrapper"> 
+            <h2>{{ dia.nombreDia }} - {{ formatearFecha(dia.fechaISO) }}</h2>
+            <div class="table-responsive-wrapper">
               <table class="tabla-cronograma">
                 <caption>Horarios para el {{ formatearFecha(dia.fechaISO) }}</caption>
                 <thead>
@@ -26,7 +26,11 @@
                   <tr v-for="evento in dia.eventos" :key="evento.id">
                     <td data-label="Hora">{{ evento.hora }}</td>
                     <td data-label="Artista">
-                      <span>{{ evento.artista }}</span>
+                      <!-- Si el artista tiene un 'slug', se convierte en un enlace a su página de detalle (futura implementación) -->
+                      <router-link v-if="evento.artistaSlug" :to="`/artistas/${evento.artistaSlug}`">
+                        {{ evento.artista }}
+                      </router-link>
+                      <span v-else>{{ evento.artista }}</span>
                     </td>
                     <td data-label="Escenario">{{ evento.escenario }}</td>
                     <td data-label="Descripción Breve">{{ evento.descripcion || 'Presentación especial' }}</td>
@@ -39,83 +43,139 @@
         <div v-else class="loading-placeholder">
           <p>El cronograma completo se anunciará próximamente.</p>
         </div>
+
       </section>
     </div>
   </main>
 </template>
 
 <script>
+// Importamos los datos centralizados del cronograma
+import { diasDelFestival } from '@/data/cronogramaData.js';
+
 export default {
   name: 'CronogramaView',
   data() {
     return {
-      diasDelFestival: [
-        {
-          fechaISO: '2024-08-15', nombreDia: 'Día 1: Apertura Folklórica',
-          eventos: [
-            { id: 'd1e1', hora: '18:00-19:00', artista: 'Apertura Ballet Local', escenario: 'Principal Sol', descripcion: 'Danzas tradicionales.' },
-            { id: 'd1e2', hora: '19:30-20:30', artista: 'Vislumbre del Esteko', escenario: 'Alternativo Luna', descripcion: 'Energía joven.' },
-            { id: 'd1e3', hora: '20:45-21:45', artista: 'Los Arcanos del Desierto', escenario: 'Principal Sol', descripcion: 'Innovación y tradición.' },
-            { id: 'd1e4', hora: '22:00-23:15', artista: 'Raly Barrionuevo', escenario: 'Principal Sol', descripcion: 'Grandes éxitos.' },
-            { id: 'd1e5', hora: '23:30-00:45', artista: 'Peteco Carabajal', escenario: 'Principal Sol', descripcion: 'Leyenda del violín.' },
-          ]
-        },
-        {
-          fechaISO: '2024-08-16', nombreDia: 'Día 2: Corazón de Chacarera',
-          eventos: [
-            { id: 'd2e1', hora: '19:00-20:00', artista: 'Don Argañaraz', escenario: 'Patio Santiagueño', descripcion: 'Voz auténtica.' },
-            { id: 'd2e2', hora: '20:15-21:15', artista: 'Artistas Emergentes SDE', escenario: 'Alternativo Luna' },
-            { id: 'd2e3', hora: '21:30-22:45', artista: 'Dúo Coplanacu', escenario: 'Principal Sol', descripcion: 'La copla hecha canción.' },
-            { id: 'd2e4', hora: '23:00-00:15', artista: 'Horacio Banegas', escenario: 'Principal Sol' },
-            { id: 'd2e5', hora: '00:30-Cierre', artista: 'Gran guitarreada popular', escenario: 'Patio Santiagueño', descripcion: 'Música y encuentro.' },
-          ]
-        },
-        {
-          fechaISO: '2024-08-17', nombreDia: 'Día 3: Noche de Leyendas',
-          eventos: [
-            { id: 'd3e1', hora: '19:30-20:30', artista: 'La Brasita de mi Chala', escenario: 'Alternativo Luna', descripcion: 'Chacarera festiva.' },
-            { id: 'd3e2', hora: '20:45-21:45', artista: 'Jóvenes Talentos del Malambo', escenario: 'Principal Sol', descripcion: 'Destreza y pasión.' },
-            { id: 'd3e3', hora: '22:00-23:45', artista: 'Los Manseros Santiagueños', escenario: 'Principal Sol', descripcion: 'Cierre inolvidable.' },
-          ]
-        }
-      ]
+      // Asignamos los datos importados a una propiedad del componente
+      diasDelFestival: diasDelFestival
     };
   },
   methods: {
     formatearFecha(fechaISO) {
-      const opciones = { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
-      return new Date(fechaISO).toLocaleDateString('es-ES', opciones);
+      if (!fechaISO) return '';
+      // Opciones para formatear la fecha a un formato legible en español
+      const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
+      // El timeZone: 'UTC' es importante para evitar que el navegador ajuste la fecha al día anterior/posterior
+      // basado en la zona horaria del usuario.
+      
+      // Creamos una nueva fecha y la formateamos
+      const fecha = new Date(fechaISO);
+      let fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
+      // Capitalizamos la primera letra del resultado (ej. "jueves" -> "Jueves")
+      return fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
     }
-  }
+  },
+  // mounted() {
+  //   // En un futuro, si los datos vinieran de una API, la llamada iría aquí:
+  //   // fetch('/api/cronograma')
+  //   //  .then(res => res.json())
+  //   //  .then(data => this.diasDelFestival = data)
+  //   //  .catch(err => console.error("Error cargando cronograma:", err));
+  // }
 }
 </script>
 
 <style scoped>
-.cronograma-page-content { padding-top: 2rem; padding-bottom: 3rem; }
-#horarios-festival h1 { text-align: center; margin-bottom: 1rem; color: var(--color-primary-red); font-size: 2.5rem; }
-#horarios-festival > .container > p { text-align: center; color: var(--color-text-medium); margin-bottom: 2.5rem; font-size: 1.1rem; }
-.dia-cronograma { margin-bottom: 3rem; background-color: var(--color-background-surface-dark); padding: 1.5rem; border-radius: 8px; border: 1px solid var(--color-border-dark); }
-.dia-cronograma h2 { color: var(--color-accent-light-blue); margin-bottom: 1.5rem; border-bottom: 2px solid var(--color-primary-red); padding-bottom: 0.5rem; font-size: 1.8rem; }
-.table-responsive-wrapper { overflow-x: auto; }
-.tabla-cronograma { width: 100%; margin-top: 1rem; }
-.tabla-cronograma th, .tabla-cronograma td { padding: 0.8em 1em; }
-.no-eventos td { text-align: center; font-style: italic; color: var(--color-text-medium); padding: 2rem 1rem !important; }
-.loading-placeholder { text-align: center; padding: 3rem; color: var(--color-text-medium); }
-
-@media (max-width: 768px) {
-  #horarios-festival h1 { font-size: 2rem; }
-  .dia-cronograma h2 { font-size: 1.5rem; }
+.cronograma-page-content {
+  padding-top: 2rem;
+  padding-bottom: 3rem;
 }
 
-@media (max-width: 360px) {
-    #horarios-festival h1 { font-size: 1.8rem; margin-bottom: 1rem; }
-    #horarios-festival > .container > p { font-size: 1rem; margin-bottom: 1.5rem; }
-    .dia-cronograma { padding: 1rem; margin-bottom: 2rem;}
-    .dia-cronograma h2 { font-size: 1.3rem; margin-bottom: 1rem; }
-    .tabla-cronograma th, .tabla-cronograma td { padding: 0.6em 0.5em;  }
-    .tabla-cronograma td { font-size: 0.8rem;}
-    .tabla-cronograma td::before { 
-        font-size: 0.75rem;
-    }
+#horarios-festival h1 {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--color-primary-red);
+  font-size: 2.5rem;
+}
+
+#horarios-festival > p { /* El párrafo introductorio */
+  text-align: center;
+  color: var(--color-text-medium);
+  margin-bottom: 2.5rem;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dia-cronograma {
+  margin-bottom: 3rem;
+  background-color: var(--color-background-surface-dark);
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-dark);
+}
+.dia-cronograma:last-child {
+  margin-bottom: 0;
+}
+
+.dia-cronograma h2 {
+  color: var(--color-accent-light-blue);
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid var(--color-primary-red);
+  padding-bottom: 0.75rem;
+  font-size: 1.8rem;
+}
+
+.table-responsive-wrapper {
+  overflow-x: auto; /* Permite scroll horizontal en tablas grandes en móvil */
+}
+
+.tabla-cronograma {
+  /* Los estilos base de la tabla (colores, bordes) vienen de estilos.css global */
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.tabla-cronograma th, .tabla-cronograma td {
+  padding: 0.8em 1em; /* Más padding para legibilidad */
+  white-space: nowrap; /* Evita que el contenido se rompa en varias líneas en desktop */
+}
+
+.tabla-cronograma td[data-label="Descripción Breve"] {
+    white-space: normal; /* Permite que la descripción sí se rompa en varias líneas */
+}
+
+.tabla-cronograma td[data-label="Artista"] a {
+    font-weight: bold;
+    /* El color viene de la regla 'a' global, se puede sobrescribir aquí si se desea */
+}
+
+.no-eventos td {
+    text-align: center;
+    font-style: italic;
+    color: var(--color-text-medium);
+    padding: 2rem 1rem !important;
+}
+
+.loading-placeholder {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-text-medium);
+}
+
+@media (max-width: 768px) {
+  #horarios-festival h1 {
+    font-size: 2.2rem;
+  }
+  .dia-cronograma h2 {
+    font-size: 1.6rem;
+  }
+  .tabla-cronograma th, .tabla-cronograma td {
+      white-space: normal; /* Permite que todo el contenido se rompa en varias líneas en móvil */
+  }
+  /* Los estilos de tabla responsiva de tu estilos.css global se aplicarán aquí, */
+  /* transformando la tabla a un formato de lista. */
 }
 </style>
