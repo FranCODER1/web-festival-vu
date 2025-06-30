@@ -326,34 +326,47 @@ export default {
       ];
       return validations.every(isValid => isValid);
     },
-    encode(data) { return Object.keys(data).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`).join('&'); },
+    encode(data) {
+      return Object.keys(data).map(key => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`).join('&');
+    },
     procesarCompra() {
       this.submitAttempted = true;
       if (this.validateAllFields()) {
         console.log('Formulario válido. Enviando datos a Netlify...');
         const datosParaNetlify = {
           'form-name': 'compra-entradas-completo',
+          // Datos del comprador
           ...this.form.comprador,
+          // Datos de la compra
           'evento-seleccionado': this.resumen.eventoNombre,
           'tipo-entrada': this.resumen.tipoEntrada,
           'cantidad-entradas': this.resumen.cantidad,
           'total-pagado': this.resumen.precioTotalFormateado,
+          // NO enviar datos sensibles de pago, solo una confirmación
           'numero-tarjeta-enmascarado': `**** **** **** ${this.form.pago.numeroTarjeta.slice(-4)}`,
         };
-        fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: this.encode(datosParaNetlify) })
-          .then(() => {
-            alert('¡Gracias! Tu solicitud de compra ha sido recibida. (Simulación exitosa)');
-            this.$router.push('/gracias'); // Redirige a una página de agradecimiento
-          })
-          .catch(error => {
-            alert(`Hubo un error al procesar tu solicitud: ${error}`);
-          });
+        
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: this.encode(datosParaNetlify)
+        })
+        .then(() => {
+          console.log('Formulario enviado a Netlify con éxito');
+          // No usamos alert, redirigimos directamente
+          this.$router.push('/gracias-compra'); // Redirige a la página de agradecimiento
+        })
+        .catch(error => {
+          console.error('Error enviando el formulario a Netlify:', error);
+          alert(`Hubo un error al procesar tu solicitud: ${error}`);
+        });
+
       } else {
         console.log('Formulario inválido. No se envía.');
+        // Opcional: mostrar un mensaje de error general más visible
       }
     }
-  },
-  // No se necesita created() ya que el usuario selecciona todo desde el formulario
+  }
 }
 </script>
 

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue' 
 import ComprarTicketView from '../views/ComprarTicketView.vue';
+import GraciasCompraView from '../views/GraciasCompraView.vue';
 
 const routes = [
   {
@@ -30,6 +31,11 @@ const routes = [
     path: '/comprar-ticket',
     name: 'comprar-ticket',
     component: ComprarTicketView,
+  },
+  { // <-- 2. AÑADIR NUEVA RUTA
+    path: '/gracias-compra',
+    name: 'gracias-compra',
+    component: GraciasCompraView
   },
   {
     path: '/ubicacion',
