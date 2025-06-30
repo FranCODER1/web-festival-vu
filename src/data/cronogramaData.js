@@ -1,7 +1,7 @@
 // src/data/cronogramaData.js
 export const diasDelFestival = [
   {
-    fechaISO: '2024-08-15',
+    fechaISO: '2025-08-15',
     nombreDia: 'Día 1: Apertura Folklórica',
     eventos: [
       { id: 'd1e1', hora: '18:00 - 19:00', artista: 'Apertura Ballet Local', escenario: 'Principal Sol', descripcion: 'Danzas tradicionales de apertura.' },
@@ -12,7 +12,7 @@ export const diasDelFestival = [
     ]
   },
   {
-    fechaISO: '2024-08-16',
+    fechaISO: '2025-08-16',
     nombreDia: 'Día 2: Corazón de Chacarera',
     eventos: [
       { id: 'd2e1', hora: '19:00 - 20:00', artista: 'Don Argañaraz', artistaSlug: 'don-arganaraz', escenario: 'Patio Santiagueño', descripcion: 'Voz auténtica.' },
@@ -23,7 +23,7 @@ export const diasDelFestival = [
     ]
   },
   {
-    fechaISO: '2024-08-17',
+    fechaISO: '2025-08-17',
     nombreDia: 'Día 3: Noche de Leyendas',
     eventos: [
       { id: 'd3e1', hora: '19:30 - 20:30', artista: 'La Brasita de mi Chala', artistaSlug: 'la-brasita-de-mi-chala', escenario: 'Alternativo Luna', descripcion: 'Chacarera festiva.' },

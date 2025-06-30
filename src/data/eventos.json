@@ -1,41 +1,82 @@
 [
   {
-    "id": "concierto-rock-2024",
-    "evento": "Concierto de Rock (Tributo a Los Redondos)",
-    "fecha": "2024-07-10",
-    "lugar": "Estadio Madre de Ciudades",
+    "id": "dia-1-apertura-folklorica-2025",
+    "evento": "Día 1: Apertura Folklórica",
+    "fecha": "2025-08-15",
+    "lugar": "Club Atletico Union Santiago",
     "ciudad": "Santiago del Estero",
-    "horario": "21:00",
-    "artista": "Los Redonditos de Ricota (tributo)",
-    "genero": "Rock",
-    "precios": { "General": 1500, "VIP": 3000, "Palco": 5000 },
+    "horario": "18:00 - Cierre",
+    "artistas": [
+      "Vislumbre del Esteko",
+      "Los Arcanos del Desierto",
+      "Raly Barrionuevo",
+      "Peteco Carabajal"
+    ],
+    "genero": "Folklore",
+    "precios": {
+      "General": 2500,
+      "VIP": 5000
+    },
     "moneda": "ARS",
     "entradas_disponibles": 500
   },
   {
-    "id": "festival-electronica-2024",
-    "evento": "Festival de Música Electrónica",
-    "fecha": "2024-07-15",
-    "lugar": "Complejo Urbano",
+    "id": "dia-2-corazon-chacarera-2025",
+    "evento": "Día 2: Corazón de Chacarera",
+    "fecha": "2025-08-16",
+    "lugar": "Club Atletico Union Santiago",
     "ciudad": "Santiago del Estero",
-    "horario": "18:00",
-    "artista": "Varios DJs",
-    "genero": "Electrónica",
-    "precios": { "General": 2000, "VIP": 4500, "Palco": 7000 },
+    "horario": "19:00 - Cierre",
+    "artistas": [
+      "Don Argañaraz",
+      "Artistas Emergentes SDE",
+      "Dúo Coplanacu",
+      "Horacio Banegas"
+    ],
+    "genero": "Folklore",
+    "precios": {
+      "General": 2500,
+      "VIP": 5000
+    },
     "moneda": "ARS",
-    "entradas_disponibles": 1000
+    "entradas_disponibles": 500
   },
   {
-    "id": "noche-jazz-2024",
-    "evento": "Noche de Jazz",
-    "fecha": "2024-07-20",
-    "lugar": "Bar Cultural La Ferretería",
+    "id": "dia-3-noche-leyendas-2025",
+    "evento": "Día 3: Noche de Leyendas",
+    "fecha": "2025-08-17",
+    "lugar": "Club Atletico Union Santiago",
     "ciudad": "Santiago del Estero",
-    "horario": "22:00",
-    "artista": "Trío de Jazz local",
-    "genero": "Jazz",
-    "precios": { "General": 800, "VIP": 1500, "Palco": 2500 },
+    "horario": "19:30 - Cierre",
+    "artistas": [
+      "La Brasita de mi Chala",
+      "Jóvenes Talentos del Malambo",
+      "Los Manseros Santiagueños"
+    ],
+    "genero": "Folklore",
+    "precios": {
+      "General": 3000,
+      "VIP": 6000
+    },
     "moneda": "ARS",
-    "entradas_disponibles": 100
+    "entradas_disponibles": 500
+  },
+  {
+    "id": "abono-general-3-dias-2025",
+    "evento": "Abono General (3 días)",
+    "fecha": "2025-08-15 al 2025-08-17",
+    "lugar": "Club Atletico Union Santiago",
+    "ciudad": "Santiago del Estero",
+    "horario": "Todos los días",
+    "artistas": [
+      "Todos los artistas del festival"
+    ],
+    "genero": "Folklore",
+    "precios": {
+      "General": 6000,
+      "VIP": 12000
+    },
+    "moneda": "ARS",
+    "entradas_disponibles": 1000
   }
 ]

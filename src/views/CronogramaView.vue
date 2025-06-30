@@ -26,7 +26,6 @@
                   <tr v-for="evento in dia.eventos" :key="evento.id">
                     <td data-label="Hora">{{ evento.hora }}</td>
                     <td data-label="Artista">
-                      <!-- Si el artista tiene un 'slug', se convierte en un enlace a su página de detalle (futura implementación) -->
                       <router-link v-if="evento.artistaSlug" :to="`/artistas/${evento.artistaSlug}`">
                         {{ evento.artista }}
                       </router-link>
@@ -175,7 +174,5 @@ export default {
   .tabla-cronograma th, .tabla-cronograma td {
       white-space: normal; /* Permite que todo el contenido se rompa en varias líneas en móvil */
   }
-  /* Los estilos de tabla responsiva de tu estilos.css global se aplicarán aquí, */
-  /* transformando la tabla a un formato de lista. */
 }
 </style>
