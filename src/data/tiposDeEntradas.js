@@ -8,7 +8,6 @@ export const tiposDeEntradas = [
     precioPreventa: '$2500 ARS',
     precioPuerta: '$3000 ARS',
     textoBoton: 'Comprar Diaria',
-    // NUEVO: Info para pre-seleccionar en el formulario
     eventoIdTarget: null, // El usuario debe elegir el día (Día 1, 2 o 3)
     tipoEntradaTarget: 'General'
   },
@@ -19,7 +18,6 @@ export const tiposDeEntradas = [
     precioPreventa: '$6000 ARS',
     precioPuerta: '$7500 ARS',
     textoBoton: 'Comprar Abono',
-    // NUEVO: Info para pre-seleccionar en el formulario
     eventoIdTarget: 'abono-general-3-dias-2025', // ID del evento "Abono" en eventos.json
     tipoEntradaTarget: 'General'
   },
@@ -30,7 +28,6 @@ export const tiposDeEntradas = [
     precioPreventa: '$5000 ARS',
     precioPuerta: '$6000 ARS',
     textoBoton: 'Comprar VIP Diaria',
-    // NUEVO: Info para pre-seleccionar en el formulario
     eventoIdTarget: null, // El usuario debe elegir el día
     tipoEntradaTarget: 'VIP'
   },
@@ -41,7 +38,6 @@ export const tiposDeEntradas = [
     precioPreventa: '$12000 ARS',
     precioPuerta: '$15000 ARS',
     textoBoton: 'Comprar Abono VIP',
-    // NUEVO: Info para pre-seleccionar en el formulario
     eventoIdTarget: 'abono-general-3-dias-2025', // ID del evento "Abono" en eventos.json
     tipoEntradaTarget: 'VIP'
   }

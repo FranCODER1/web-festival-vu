@@ -26,10 +26,7 @@
                   <tr v-for="evento in dia.eventos" :key="evento.id">
                     <td data-label="Hora">{{ evento.hora }}</td>
                     <td data-label="Artista">
-                      <router-link v-if="evento.artistaSlug" :to="`/artistas/${evento.artistaSlug}`">
-                        {{ evento.artista }}
-                      </router-link>
-                      <span v-else>{{ evento.artista }}</span>
+                      <span>{{ evento.artista }}</span>
                     </td>
                     <td data-label="Escenario">{{ evento.escenario }}</td>
                     <td data-label="Descripción Breve">{{ evento.descripcion || 'Presentación especial' }}</td>
@@ -49,7 +46,6 @@
 </template>
 
 <script>
-// Importamos los datos centralizados del cronograma
 import { diasDelFestival } from '@/data/cronogramaData.js';
 
 export default {
@@ -63,25 +59,13 @@ export default {
   methods: {
     formatearFecha(fechaISO) {
       if (!fechaISO) return '';
-      // Opciones para formatear la fecha a un formato legible en español
       const opciones = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' };
-      // El timeZone: 'UTC' es importante para evitar que el navegador ajuste la fecha al día anterior/posterior
-      // basado en la zona horaria del usuario.
-      
-      // Creamos una nueva fecha y la formateamos
       const fecha = new Date(fechaISO);
       let fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
       // Capitalizamos la primera letra del resultado (ej. "jueves" -> "Jueves")
       return fechaFormateada.charAt(0).toUpperCase() + fechaFormateada.slice(1);
     }
   },
-  // mounted() {
-  //   // En un futuro, si los datos vinieran de una API, la llamada iría aquí:
-  //   // fetch('/api/cronograma')
-  //   //  .then(res => res.json())
-  //   //  .then(data => this.diasDelFestival = data)
-  //   //  .catch(err => console.error("Error cargando cronograma:", err));
-  // }
 }
 </script>
 
